@@ -2,7 +2,6 @@ package com.tmholen.thecrazynewsmsapp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,7 +32,7 @@ public class ContactScreen extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_screen);
 
-        requestMissingPermissions();
+        //requestMissingPermissions();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,15 +55,12 @@ public class ContactScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        requestMissingPermissions();
-
         if(permissionGranted(Manifest.permission.WRITE_CONTACTS)){
             System.out.println("Permission Granted");
             displayContactData();
 
         }else{
-            System.out.println("Permission Denied");
-            displayMissingPermissionMessage();
+            displayMissingPermissionData();
         }
 
 
@@ -85,16 +80,19 @@ public class ContactScreen extends AppCompatActivity
 
     private void displayContactData() {
         DataExtractor dataExtractor = new DataExtractor(getContentResolver()); //Data
-        dataExtractor.obtainContactInformation();
 
         ListView contactList = (ListView) findViewById(R.id.contactListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, dataExtractor.getContacts());
         contactList.setAdapter(contactArrayAdapter);
     }
 
-    private void displayMissingPermissionMessage() {
+    private void displayMissingPermissionData() {
         ArrayList<Contact> error = new ArrayList<>();
-        error.add(new Contact("Error", "You must grant this app access to your contacts", "Find app in phone settings if you clicked \"never show again\" in the permission dialog"));
+        Tools t = new Tools(){};
+
+        error.add(new Contact("Error", "You must grant this app access to your contacts",
+                "Find app in phone settings if you clicked \"never show again\" in the permission dialog"
+                , t.ParseResourceToUri(R.drawable.error)));
 
         ListView contactList = (ListView) findViewById(R.id.contactListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, error);
@@ -159,7 +157,7 @@ public class ContactScreen extends AppCompatActivity
         switch (requestCode) {
             case PERMISSION_REQUEST_WRITE_CONTACTS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    displayContactData();
+                    //displayContactData();
                 } else {
                     System.out.println("Permission denied");
                 }

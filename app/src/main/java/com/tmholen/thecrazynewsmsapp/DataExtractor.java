@@ -21,7 +21,6 @@ public class DataExtractor {
     private Contact userInformation;
     private Cursor cursor;
 
-
     public DataExtractor(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
         contacts = new ArrayList<>();
@@ -31,7 +30,9 @@ public class DataExtractor {
 
     public void obtainContactInformation(){
         cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while (cursor.moveToNext()) {
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+
             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -42,10 +43,14 @@ public class DataExtractor {
             }else{
                 contacts.add(new Contact(contactId, name, number));
             }
+            cursor.moveToNext();
         }
         cursor.close();
     }
 
+    private void uniqueContact(){
+
+    }
 
     //TODO implement this functionality
     public void obtainUserInformation(){

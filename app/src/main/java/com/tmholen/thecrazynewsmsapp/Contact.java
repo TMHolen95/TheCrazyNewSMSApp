@@ -13,6 +13,7 @@ public class Contact implements Serializable {
     private Uri contactImageUri;
     private String contactName;
     private String contactNumber;
+    private Tools t = new Tools(){};
 
     public Contact(String contactId,String contactName, String contactNumber, Uri contactImageUri) {
         this.contactId = contactId;
@@ -32,14 +33,14 @@ public class Contact implements Serializable {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        contactImageUri = Uri.parse("android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_menu_camera);
+        contactImageUri = t.ParseResourceToUri(R.drawable.ic_menu_camera);
     }
 
     public Contact(String contactId,String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = "Unknown";
-        contactImageUri = Uri.parse("android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_menu_camera);
+        contactImageUri = t.ParseResourceToUri(R.drawable.ic_menu_camera);
     }
 
 
