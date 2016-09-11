@@ -1,45 +1,54 @@
 package com.tmholen.thecrazynewsmsapp;
 
+import android.net.Uri;
+
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by dogsh on 02-Sep-16.
  */
 
 public class Contact implements Serializable {
-    private int contactImage;
+    private String contactId;
+    private Uri contactImageUri;
     private String contactName;
     private String contactNumber;
-    private Date contactBirthday;
 
-    public Contact(String contactName, String contactNumber) {
+    public Contact(String contactId,String contactName, String contactNumber, Uri contactImageUri) {
+        this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        this.contactImage = R.drawable.my_profile_picture;
+        this.contactImageUri = contactImageUri;
     }
 
-    public Contact(String contactName, String contactNumber, int contactImage, Date contactBirthday) {
+    public Contact(String contactId,String contactName, Uri contactImageUri) {
+        this.contactId = contactId;
+        this.contactName = contactName;
+        this.contactNumber = "Unknown";
+        this.contactImageUri = contactImageUri;
+    }
+
+    public Contact(String contactId,String contactName, String contactNumber) {
+        this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        this.contactImage = contactImage;
-        this.contactBirthday = contactBirthday;
+        contactImageUri = Uri.parse("android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_menu_camera);
     }
 
-    public Date getContactBirthday() {
-        return contactBirthday;
+    public Contact(String contactId,String contactName) {
+        this.contactId = contactId;
+        this.contactName = contactName;
+        this.contactNumber = "Unknown";
+        contactImageUri = Uri.parse("android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_menu_camera);
     }
 
-    public void setContactBirthday(Date contactBirthday) {
-        this.contactBirthday = contactBirthday;
+
+    public Uri getContactImageUri() {
+        return contactImageUri;
     }
 
-    public int getContactImage() {
-        return contactImage;
-    }
-
-    public void setContactImage(int contactImage) {
-        this.contactImage = contactImage;
+    public void setContactImageUri(Uri contactImageUri) {
+        this.contactImageUri = contactImageUri;
     }
 
     public String getContactName() {

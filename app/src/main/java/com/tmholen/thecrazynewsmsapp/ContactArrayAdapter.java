@@ -22,7 +22,7 @@ public class ContactArrayAdapter extends ArrayAdapter<Contact> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Contact contact = getItem(position);
 
         if(convertView == null){
@@ -30,7 +30,7 @@ public class ContactArrayAdapter extends ArrayAdapter<Contact> {
         }
 
         ImageView contactImage = (ImageView) convertView.findViewById(R.id.contactImage);
-        contactImage.setImageResource(contact.getContactImage());
+        contactImage.setImageURI(contact.getContactImageUri());
 
         TextView contactName = (TextView) convertView.findViewById(R.id.contactName);
         contactName.setText(contact.getContactName());
