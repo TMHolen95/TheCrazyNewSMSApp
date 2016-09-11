@@ -1,13 +1,11 @@
 package com.tmholen.thecrazynewsmsapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
+
+import com.tmholen.thecrazynewsmsapp.contacts.Contact;
 
 import java.util.ArrayList;
 
@@ -24,15 +22,12 @@ public class DataExtractor {
     public DataExtractor(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
         contacts = new ArrayList<>();
-        obtainContactInformation();
-        //obtainUserInformation();
     }
 
-    public void obtainContactInformation(){
-        cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+    public void obtainContactData(){
+        cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-
             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -48,12 +43,16 @@ public class DataExtractor {
         cursor.close();
     }
 
-    private void uniqueContact(){
+    public void obtainSmsData(){
+        cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
 
+        }
     }
 
     //TODO implement this functionality
-    public void obtainUserInformation(){
+    public void obtainUserData(){
 
         //Account[] accounts = AccountManager.getA()
         cursor = contentResolver.query(ContactsContract.Profile.CONTENT_URI,null,null,null,null);

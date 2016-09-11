@@ -20,19 +20,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.tmholen.thecrazynewsmsapp.contacts.Contact;
+import com.tmholen.thecrazynewsmsapp.contacts.ContactArrayAdapter;
+
 import java.util.ArrayList;
 
 public class ContactScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int PERMISSION_REQUEST_WRITE_CONTACTS = 1;
+    private static final int PERMISSION_REQUEST_CONTACTS = 1;
+    private static final int PERMISSION_REQUEST_SMS = 2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_screen);
 
-        //requestMissingPermissions();
+        requestMissingPermissions();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,10 +70,11 @@ public class ContactScreen extends AppCompatActivity
 
 
 
-/*
+
+        /*//TODO implement this along with the method in the data extractor class
         ImageView profileImage = (ImageView) findViewById(R.id.myPicture);
-//        Uri userProfileImageUri = dataExtractor.getUserInformation().getContactImageUri();
-//        profileImage.setImageURI(userProfileImageUri);
+        Uri userProfileImageUri = dataExtractor.getUserInformation().getContactImageUri();
+        profileImage.setImageURI(userProfileImageUri);
 
         TextView userName  = (TextView) findViewById(R.id.userName);
         String userNameText = dataExtractor.getUserInformation().getContactName();
@@ -80,7 +86,7 @@ public class ContactScreen extends AppCompatActivity
 
     private void displayContactData() {
         DataExtractor dataExtractor = new DataExtractor(getContentResolver()); //Data
-
+        dataExtractor.obtainContactData();
         ListView contactList = (ListView) findViewById(R.id.contactListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, dataExtractor.getContacts());
         contactList.setAdapter(contactArrayAdapter);
@@ -155,9 +161,16 @@ public class ContactScreen extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case PERMISSION_REQUEST_WRITE_CONTACTS: {
+            case PERMISSION_REQUEST_CONTACTS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //displayContactData();
+                    displayContactData();
+                } else {
+                    System.out.println("Permission denied");
+                }
+            }
+            case PERMISSION_REQUEST_SMS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //displayContactData(); Change to something else in time
                 } else {
                     System.out.println("Permission denied");
                 }
@@ -166,16 +179,17 @@ public class ContactScreen extends AppCompatActivity
     }
 
     private void requestMissingPermissions() {
-        requestPermission(Manifest.permission.WRITE_CONTACTS, PERMISSION_REQUEST_WRITE_CONTACTS, "This app need access to your contacts to work. \nPlease grant the app access");
-        //TODO add more permissions if needed.
+        requestPermission(Manifest.permission.WRITE_CONTACTS, PERMISSION_REQUEST_CONTACTS, "This app need access to your contacts to work. \nPlease grant the app access");
+        requestPermission(Manifest.permission.READ_SMS, PERMISSION_REQUEST_SMS, "");
     }
 
     private void requestPermission(String manifestPermissionValue, int permissionRequestInt, String message) {
         if (ContextCompat.checkSelfPermission(this, manifestPermissionValue) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, manifestPermissionValue)) {
-                AlertDialog.Builder permissionExplaination = new AlertDialog.Builder(this);
-                permissionExplaination.setMessage(message);
-                permissionExplaination.setPositiveButton("Ok", null);
+                AlertDialog.Builder permissionExplanation = new AlertDialog.Builder(this);
+                permissionExplanation.setMessage(message);
+                permissionExplanation.setPositiveButton("Ok", null);
+                permissionExplanation.create();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{manifestPermissionValue}, permissionRequestInt);
             }

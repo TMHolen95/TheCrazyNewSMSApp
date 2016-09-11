@@ -1,6 +1,9 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.contacts;
 
 import android.net.Uri;
+
+import com.tmholen.thecrazynewsmsapp.R;
+import com.tmholen.thecrazynewsmsapp.Tools;
 
 import java.io.Serializable;
 
