@@ -54,7 +54,7 @@ public class ContactScreen extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -98,7 +98,7 @@ public class ContactScreen extends AppCompatActivity
 
         error.add(new Contact("Error", "You must grant this app access to your contacts",
                 "Find app in phone settings if you clicked \"never show again\" in the permission dialog"
-                , t.ParseResourceToUri(R.drawable.error)));
+                , t.ParseResourceToUri(R.drawable.ic_error)));
 
         ListView contactList = (ListView) findViewById(R.id.contactListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, error);
@@ -113,6 +113,12 @@ public class ContactScreen extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        displayContactData();
     }
 
     @Override

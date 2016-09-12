@@ -36,14 +36,14 @@ public class Contact implements Serializable {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        contactImageUri = t.ParseResourceToUri(R.drawable.ic_menu_camera);
+        contactImageUri = t.ParseResourceToUri(R.drawable.ic_person_missing_photo);
     }
 
     public Contact(String contactId,String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = "Unknown";
-        contactImageUri = t.ParseResourceToUri(R.drawable.ic_menu_camera);
+        contactImageUri = t.ParseResourceToUri(R.drawable.ic_person_missing_photo);
     }
 
 

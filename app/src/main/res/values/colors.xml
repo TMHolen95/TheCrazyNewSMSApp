@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--Color palette from http://paletton.com/#uid=14H0u0kdn8588jg8-cki+70ou5i-->
+    <color name="colorPrimary">#3c3142</color>
+    <!--<color name="colorPrimary">#251a2b</color>-->
+    <color name="colorPrimaryDark">#15081c</color>
+    <color name="colorSecondary">#1e1225</color>
+    <color name="colorSecondaryLight">#3c3142</color>
+
+    <color name="colorFabPrimary">#251a2b</color>
+    <color name="colorFabSub">#39313d</color>
+
+    <color name="textColorPrimary">#eae9ea</color>
+    <color name="textColorSub">#bbb5bd</color>
+
 </resources>
