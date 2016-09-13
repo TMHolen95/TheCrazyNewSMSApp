@@ -25,23 +25,33 @@ import com.tmholen.thecrazynewsmsapp.contacts.ContactArrayAdapter;
 
 import java.util.ArrayList;
 
-public class ContactScreen extends AppCompatActivity
+public class MainScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    Toolbar toolbar;
+    ListView entryList;
     private static final int PERMISSION_REQUEST_CONTACTS = 1;
     private static final int PERMISSION_REQUEST_SMS = 2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_screen);
+        entryList = (ListView) findViewById(R.id.entryListView);
+        EnableToolbar();
+        ShowFabButton();
+        EnableNavigationDrawer();
+        FillNavigationDrawerMenu();
 
-        requestMissingPermissions();
+        NavigateToMessageScreen();
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void EnableToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
+
+    private void ShowFabButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,27 +60,23 @@ public class ContactScreen extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+    }
 
+    private void EnableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+    }
 
+    private void FillNavigationDrawerMenu() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        if(permissionGranted(Manifest.permission.WRITE_CONTACTS)){
-            System.out.println("Permission Granted");
-            displayContactData();
-
-        }else{
-            displayMissingPermissionData();
-        }
+    }
 
 
-
-
+    private void setProfileImage(){
         /*//TODO implement this along with the method in the data extractor class
         ImageView profileImage = (ImageView) findViewById(R.id.myPicture);
         Uri userProfileImageUri = dataExtractor.getUserInformation().getContactImageUri();
@@ -80,19 +86,59 @@ public class ContactScreen extends AppCompatActivity
         String userNameText = dataExtractor.getUserInformation().getContactName();
 
         userName.setText(userNameText);*/
-
-
     }
 
-    private void displayContactData() {
+    private void NavigateToMessageScreen(){
+        requestAccessToContacts(PERMISSION_REQUEST_SMS);
+        if(permissionGranted(Manifest.permission.READ_SMS)){
+            DisplayMessageData();
+        }else{
+            DisplayMissingPermissionData();
+
+        }
+    }
+
+    private void DisplayMessageData(){
+        ArrayList<Contact> featureNotImplemented = new ArrayList<>();
+        Tools t = new Tools(){};
+        featureNotImplemented.add(new Contact("FeatureNotImplemented", "Feature not yet implemented",
+                "Coming soon"
+                , t.ParseResourceToUri(R.drawable.ic_error)));
+        
+        ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, featureNotImplemented);
+        entryList.setAdapter(contactArrayAdapter);
+        contactArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void NavigateToContactScreen(){
+        if(permissionGranted(Manifest.permission.WRITE_CONTACTS)){
+            DisplayContactData();
+        }else{
+            DisplayMissingPermissionData();
+            requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
+        }
+    }
+
+    private void DisplayContactData() {
         DataExtractor dataExtractor = new DataExtractor(getContentResolver()); //Data
         dataExtractor.obtainContactData();
-        ListView contactList = (ListView) findViewById(R.id.contactListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, dataExtractor.getContacts());
-        contactList.setAdapter(contactArrayAdapter);
+        entryList.setAdapter(contactArrayAdapter);
+        contactArrayAdapter.notifyDataSetChanged();
+
     }
 
-    private void displayMissingPermissionData() {
+    private void NavigateToAccountInfoScreen(){
+
+    }
+
+
+    private void DisplayAccountInfoData(){
+
+    }
+
+
+    private void DisplayMissingPermissionData() {
         ArrayList<Contact> error = new ArrayList<>();
         Tools t = new Tools(){};
 
@@ -100,10 +146,12 @@ public class ContactScreen extends AppCompatActivity
                 "Find app in phone settings if you clicked \"never show again\" in the permission dialog"
                 , t.ParseResourceToUri(R.drawable.ic_error)));
 
-        ListView contactList = (ListView) findViewById(R.id.contactListView);
+        entryList = (ListView) findViewById(R.id.entryListView);
         ContactArrayAdapter contactArrayAdapter = new ContactArrayAdapter(this, error);
-        contactList.setAdapter(contactArrayAdapter);
+        entryList.setAdapter(contactArrayAdapter);
+        contactArrayAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -118,7 +166,6 @@ public class ContactScreen extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        displayContactData();
     }
 
     @Override
@@ -150,12 +197,25 @@ public class ContactScreen extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_add) {
+        switch(id){
+            case R.id.nav_message_screen:{
+                NavigateToMessageScreen();
+            }
+            case R.id.nav_contact_screen:{
+                NavigateToContactScreen();
+            }
+            case R.id.nav_account_info:{
+                NavigateToAccountInfoScreen();
+            }
+            case R.id.nav_add:{
 
-        } else if (id == R.id.nav_manage) {
+            }
+            case R.id.nav_manage:{
 
-        } else if (id == R.id.nav_delete) {
+            }
+            case R.id.nav_delete:{
 
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -169,14 +229,14 @@ public class ContactScreen extends AppCompatActivity
         switch (requestCode) {
             case PERMISSION_REQUEST_CONTACTS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    displayContactData();
+                    NavigateToContactScreen();
                 } else {
                     System.out.println("Permission denied");
                 }
             }
             case PERMISSION_REQUEST_SMS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //displayContactData(); Change to something else in time
+                    NavigateToMessageScreen();
                 } else {
                     System.out.println("Permission denied");
                 }
@@ -184,29 +244,36 @@ public class ContactScreen extends AppCompatActivity
         }
     }
 
-    private void requestMissingPermissions() {
-        requestPermission(Manifest.permission.WRITE_CONTACTS, PERMISSION_REQUEST_CONTACTS, "This app need access to your contacts to work. \nPlease grant the app access");
-        requestPermission(Manifest.permission.READ_SMS, PERMISSION_REQUEST_SMS, "");
+    public void requestAccessToContacts(int permissionRequestCode) {
+        requestPermission(Manifest.permission.WRITE_CONTACTS,
+                permissionRequestCode,
+                "This app need access to your contacts to work. \nPlease grant the app access");
     }
 
-    private void requestPermission(String manifestPermissionValue, int permissionRequestInt, String message) {
-        if (ContextCompat.checkSelfPermission(this, manifestPermissionValue) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, manifestPermissionValue)) {
-                AlertDialog.Builder permissionExplanation = new AlertDialog.Builder(this);
-                permissionExplanation.setMessage(message);
-                permissionExplanation.setPositiveButton("Ok", null);
-                permissionExplanation.create();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{manifestPermissionValue}, permissionRequestInt);
+    public void requestAccessToSms(int permissionRequestCode) {
+        requestPermission(Manifest.permission.SEND_SMS,
+                permissionRequestCode,
+                "This app need access to your contacts to work. \nPlease grant the app access");
+    }
+
+    public void requestPermission(String manifestPermissionValue, int permissionRequestInt, String message) {
+            if (ContextCompat.checkSelfPermission(this, manifestPermissionValue) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, manifestPermissionValue)) {
+                    AlertDialog.Builder permissionExplanation = new AlertDialog.Builder(this);
+                    permissionExplanation.setMessage(message);
+                    permissionExplanation.setPositiveButton("Ok", null);
+                    permissionExplanation.create();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{manifestPermissionValue}, permissionRequestInt);
+                }
             }
-        }
+
     }
 
-    private boolean permissionGranted(String manifestPermissionValues) {
+    public boolean permissionGranted(String manifestPermissionValues) {
         boolean result = true;
         result = ContextCompat.checkSelfPermission(this, manifestPermissionValues) == PackageManager.PERMISSION_GRANTED;
         return result;
     }
-
 
 }

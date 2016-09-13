@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_contact_screen"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/content_contact_screen"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+tools:context="com.tmholen.thecrazynewsmsapp.MainScreen"
+tools:showIn="@layout/app_bar_contact_screen">
+
+<ListView
+    android:id="@+id/entryListView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.tmholen.thecrazynewsmsapp.ContactScreen"
-    tools:showIn="@layout/app_bar_contact_screen">
-
-    <ListView
-        android:id="@+id/contactListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:scrollbarSize="15dp"
-        android:scrollbarThumbVertical="@drawable/scrollbar_style"/>
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:scrollbarSize="15dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_style"/>
 </RelativeLayout>
