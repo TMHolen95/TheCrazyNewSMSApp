@@ -5,17 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
 import com.tmholen.thecrazynewsmsapp.contacts.Contact;
@@ -28,7 +23,6 @@ import java.util.ArrayList;
  */
 
 public class ContactScreen extends AppCompatActivity {
-    Toolbar toolbar;
     ListView entryList;
     ContactArrayAdapter contactArrayAdapter;
     PermissionHandler permissions;
@@ -38,22 +32,30 @@ public class ContactScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_screen);
+        setContentView(R.layout.activity_main_screens);
         entryList = (ListView) findViewById(R.id.entryListView);
 
 
-        UiComponents ui = new UiComponents(this, toolbar);
+        UiComponents ui = new UiComponents(this, this);
         ui.AddDefaultNavigationActivityElementsToScreen();
 
         permissions = new PermissionHandler(this,this);
 
-        CheckPermissionBeforeDisplayingContacts();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CheckPermissionBeforeDisplayingContacts();
+            }
+        }).start();
+
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        contactArrayAdapter.notifyDataSetChanged();
+        if(contactArrayAdapter != null){
+            contactArrayAdapter.notifyDataSetChanged();
+        }
     }
 
     /*

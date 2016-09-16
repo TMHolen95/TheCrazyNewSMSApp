@@ -28,7 +28,7 @@ public class ContactArrayAdapter extends ArrayAdapter<Contact> {
         Contact contact = getItem(position);
 
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.contact_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_contact, parent, false);
         }
 
         ImageView contactImage = (ImageView) convertView.findViewById(R.id.contactImage);

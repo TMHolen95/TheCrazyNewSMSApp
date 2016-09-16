@@ -1,6 +1,7 @@
 package com.tmholen.thecrazynewsmsapp;
 
 import android.net.Uri;
+import android.support.annotation.WorkerThread;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

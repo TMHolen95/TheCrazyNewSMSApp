@@ -28,7 +28,7 @@ public class MessageArrayAdapter extends ArrayAdapter {
         TextMessage message = (TextMessage) getItem(position);
 
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.message_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_message, parent, false);
         }
 
         ImageView recipientImage = (ImageView) convertView.findViewById(R.id.messageRecipientImage);

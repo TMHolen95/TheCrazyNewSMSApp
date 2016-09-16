@@ -12,15 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.tmholen.thecrazynewsmsapp.contacts.Contact;
-import com.tmholen.thecrazynewsmsapp.contacts.ContactArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.messaging.TextMessage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MessageScreen extends AppCompatActivity {
-    Toolbar toolbar;
     ListView entryList;
     private static final int PERMISSION_REQUEST_SMS = 2;
     MessageArrayAdapter messageArrayAdapter;
@@ -29,22 +26,29 @@ public class MessageScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_screen);
+        setContentView(R.layout.activity_main_screens);
         entryList = (ListView) findViewById(R.id.entryListView);
 
-        UiComponents ui = new UiComponents(this, toolbar);
+        UiComponents ui = new UiComponents(this, this);
         ui.AddDefaultNavigationActivityElementsToScreen();
 
         permissions = new PermissionHandler(this, this);
         permissions.requestAccessToSms(PERMISSION_REQUEST_SMS);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NavigateToMessageScreen();
+            }
+        }).start();
 
-        NavigateToMessageScreen();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        messageArrayAdapter.notifyDataSetChanged();
+        if(messageArrayAdapter != null){
+            messageArrayAdapter.notifyDataSetChanged();
+        }
     }
 
     private void NavigateToMessageScreen(){
@@ -71,6 +75,13 @@ public class MessageScreen extends AppCompatActivity {
                 cal,
                 "2"
                 ));
+        Calendar cal2 = Calendar.getInstance();
+        cal2.add(Calendar.DATE,-100);
+        featureNotImplemented.add(new TextMessage("Test Message",
+                "Long ago Test",
+                cal2,
+                "3"
+        ));
 
         messageArrayAdapter = new MessageArrayAdapter(this, featureNotImplemented);
         entryList.setAdapter(messageArrayAdapter);
@@ -125,13 +136,6 @@ public class MessageScreen extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-/*            case PERMISSION_REQUEST_CONTACTS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    NavigateToContactScreen();
-                } else {
-                    System.out.println("Permission denied");
-                }
-            }*/
             case PERMISSION_REQUEST_SMS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     NavigateToMessageScreen();
