@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="5dp"
-    android:paddingTop="5dp"
-    >
+    android:paddingTop="5dp">
 
     <ImageView
         android:layout_width="50dp"
@@ -16,37 +15,40 @@
         app:srcCompat="@mipmap/ic_launcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/contactImage"/>
-
-<!--    <CheckBox
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/checkBox"
-        android:layout_alignBottom="@+id/contactNumber"
-        android:elevation="1dp"
-        android:visibility="gone"
-        android:layout_alignParentTop="true" />-->
+        android:id="@+id/messageRecipientImage"/>
 
     <TextView
-        android:text="Your Contact"
+        android:text="Sender"
         android:textColor="@color/textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/contactName"
+        android:id="@+id/messageRecipient"
         android:gravity="bottom"
         android:layout_marginLeft="5dp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/contactImage" />
+        android:layout_toEndOf="@+id/messageRecipientImage" />
 
     <TextView
-        android:text="Contact Number"
+        android:text="Message"
         android:textColor="@color/textColorSub"
         android:textSize="@dimen/sub_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/contactNumber"
+        android:id="@+id/message"
         android:layout_marginLeft="5dp"
-        android:layout_below="@+id/contactName"
-        android:layout_toEndOf="@+id/contactImage" />
+        android:layout_below="@+id/messageRecipient"
+        android:layout_toEndOf="@+id/messageRecipientImage" />
+
+    <TextView
+        android:text="messageTimeStamp"
+        android:textColor="@color/textColorSub"
+        android:textSize="@dimen/sub_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageTimestamp"
+        android:layout_marginLeft="5dp"
+        android:gravity="end|bottom"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/messageRecipient" />
+
 </RelativeLayout>
