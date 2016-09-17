@@ -13,4 +13,15 @@
     <color name="textColorPrimary">#eae9ea</color>
     <color name="textColorSub">#bbb5bd</color>
 
+
+    <color name="navSelectedBackground">#7039313d</color>
+    <color name="navBackground">#bbb5bd</color>
+    <color name="navSelectedItem">#c5c69f</color>
+    <color name="navItem">#eae9ea</color>
+
+    <color name="navGradientStart">#3c3142</color>
+    <color name="navGradientCenter">#3c3142</color>
+    <color name="navGradientEnd">#15081c</color>
+
+
 </resources>
