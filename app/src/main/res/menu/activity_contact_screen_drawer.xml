@@ -2,58 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <!--
-            <group android:id="@+id/navigation" android:checkableBehavior="single" >
-                <item
-                    android:title="Navigation"
-                    android:checkable="false"
-                    android:enabled="false" />
-                <item
-                    android:id="@+id/nav_message_screen"
-                    android:icon="@drawable/ic_message_menu"
-                    android:title="Messages" />
-                <item
-                    android:id="@+id/nav_contact_screen"
-                    android:icon="@drawable/ic_contacts"
-                    android:title="Contacts" />
-                <item
-                    android:id="@+id/nav_account_info"
-                    android:icon="@drawable/ic_account_info"
-                    android:title="Account Info" />
-            </group>
-
-
-            <group android:id="@+id/contactOptions" android:checkableBehavior="single">
-                <item
-                    android:title="Contact Options"
-                    android:checkable="false"
-                    android:enabled="false"
-                    a/>
-                <item
-                    android:id="@+id/nav_add"
-                    android:icon="@drawable/ic_person_add"
-                    android:title="Add Contact" />
-
-                <item
-                    android:id="@+id/nav_manage"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="Manage Contact" />
-                <item
-                    android:id="@+id/nav_delete"
-                    android:icon="@drawable/ic_delete"
-                    android:title="Delete Contact" />
-            </group>
-    -->
-
-
     <item android:checkable="false"
         android:title="Navigation">
         <menu android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_message_screen"
                 android:icon="@drawable/ic_message_menu"
-                android:title="Messages" />
+                android:title="Messages"
+                android:checked="true"/>
             <item
                 android:id="@+id/nav_contact_screen"
                 android:icon="@drawable/ic_contacts"

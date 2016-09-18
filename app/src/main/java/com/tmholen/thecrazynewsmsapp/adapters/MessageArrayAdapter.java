@@ -1,4 +1,4 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tmholen.thecrazynewsmsapp.messaging.TextMessage;
+import com.tmholen.thecrazynewsmsapp.R;
+import com.tmholen.thecrazynewsmsapp.Tools;
+import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
 
 import java.util.List;
 
@@ -26,16 +28,16 @@ public class MessageArrayAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         TextMessage message = (TextMessage) getItem(position);
-
+        Tools t = new Tools(){};
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_message, parent, false);
         }
 
         ImageView recipientImage = (ImageView) convertView.findViewById(R.id.messageRecipientImage);
-        recipientImage.setImageURI(message.getRecipientImage());
+        recipientImage.setImageURI(t.ParseResourceToUri(message.getSenderImage()));
 
         TextView recipientName = (TextView) convertView.findViewById(R.id.messageRecipient);
-        recipientName.setText(message.getRecipientName());
+        recipientName.setText(message.getSender());
 
         TextView recipientMessage = (TextView) convertView.findViewById(R.id.message);
         recipientMessage.setText(message.getMessage());

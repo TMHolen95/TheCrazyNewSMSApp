@@ -1,4 +1,4 @@
-package com.tmholen.thecrazynewsmsapp.contacts;
+package com.tmholen.thecrazynewsmsapp.datastructures;
 
 import android.net.Uri;
 
@@ -12,47 +12,39 @@ import java.io.Serializable;
  */
 
 public class Contact implements Serializable {
-    private String contactId;
-    private Uri contactImageUri;
+    private int contactId;
+    private String contactImageUriAsString;
     private String contactName;
     private String contactNumber;
     private Tools t = new Tools(){};
 
-    public Contact(String contactId,String contactName, String contactNumber, Uri contactImageUri) {
+    public Contact(int contactId,String contactName, String contactNumber, String contactImageUri) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        this.contactImageUri = contactImageUri;
+        this.contactImageUriAsString = contactImageUri;
     }
 
-    public Contact(String contactId,String contactName, Uri contactImageUri) {
-        this.contactId = contactId;
-        this.contactName = contactName;
-        this.contactNumber = "Unknown";
-        this.contactImageUri = contactImageUri;
-    }
-
-    public Contact(String contactId,String contactName, String contactNumber) {
+    public Contact(int contactId, String contactName, String contactNumber) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
-        contactImageUri = t.ParseResourceToUri(R.drawable.ic_person_missing_photo);
+        contactImageUriAsString = t.ParseResourceToUriString(R.drawable.ic_person_missing_photo);
     }
 
-    public Contact(String contactId,String contactName) {
+    public Contact(int contactId,String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = "Unknown";
-        contactImageUri = t.ParseResourceToUri(R.drawable.ic_person_missing_photo);
+        contactImageUriAsString = t.ParseResourceToUriString(R.drawable.ic_person_missing_photo);
     }
 
-
-    public Uri getContactImageUri() {
-        return contactImageUri;
+    public String getContactImageUriAsString() {
+        return contactImageUriAsString;
     }
 
-    public void setContactImageUri(Uri contactImageUri) {
-        this.contactImageUri = contactImageUri;
+    public void setContactImageUriAsString(Uri contactImageUriAsString) {
+        this.contactImageUriAsString = contactImageUriAsString.toString();
     }
 
     public String getContactName() {

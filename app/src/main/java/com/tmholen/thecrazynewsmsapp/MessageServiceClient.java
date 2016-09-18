@@ -1,6 +1,6 @@
 package com.tmholen.thecrazynewsmsapp;
 
-import com.tmholen.thecrazynewsmsapp.messaging.TextMessage;
+import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
 
 import java.util.ArrayList;
 import java.util.List;

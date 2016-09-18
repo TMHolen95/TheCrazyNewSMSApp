@@ -12,10 +12,10 @@
     tools:showIn="@layout/app_bar_main_screens">
 
     <fragment
-        android:id="@+id/listViewFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:name="com.tmholen.thecrazynewsmsapp.ListViewFragment"
-        tools:layout="@layout/listview_content_screen" />
+        android:id="@+id/messagingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.tmholen.thecrazynewsmsapp.MessagingFragment"
+        tools:layout="@layout/messaging_content_screen" />
 
 </FrameLayout>

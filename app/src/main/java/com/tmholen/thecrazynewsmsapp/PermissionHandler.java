@@ -21,10 +21,6 @@ public class PermissionHandler {
                 permissionRequestCode);
     }
 
-    public void requestAccessToSms(int permissionRequestCode) {
-        requestPermission(Manifest.permission.SEND_SMS,
-                permissionRequestCode);
-    }
 
     public PermissionHandler(AppCompatActivity appCompatActivity, Context context) {
         this.appCompatActivity = appCompatActivity;

@@ -23,5 +23,6 @@
     <color name="navGradientCenter">#3c3142</color>
     <color name="navGradientEnd">#15081c</color>
 
+    <color name="messageField">#10FFFFFF</color>
 
 </resources>
