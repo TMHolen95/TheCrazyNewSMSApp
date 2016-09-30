@@ -30,7 +30,7 @@
             android:name=".Messaging"
             android:label="New Message"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

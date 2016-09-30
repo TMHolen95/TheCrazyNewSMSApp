@@ -25,31 +25,31 @@ public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "userData.db";
 
 
-    public static final String TABLE_DIALOG = "dialog";
-    public static final String COLUMN_DIALOG_ID = "_dialogID";
-    public static final String COLUMN_DIALOG_CONTACT = "dialogContact";
-    public static final String COLUMN_DIALOG_LAST_MESSAGE = "dialogLastMessage";
-    public static final String COLUMN_DIALOG_TIMESTAMP = "dialogTimestamp";
+    private static final String TABLE_DIALOG = "dialog";
+    private static final String COLUMN_DIALOG_ID = "_dialogID";
+    private static final String COLUMN_DIALOG_CONTACT = "dialogContact";
+    private static final String COLUMN_DIALOG_LAST_MESSAGE = "dialogLastMessage";
+    private static final String COLUMN_DIALOG_TIMESTAMP = "dialogTimestamp";
 
-    public static final String TABLE_MESSAGE = "message";
-    public static final String COLUMN_MESSAGE_ID = "_messageID";
-    public static final String COLUMN_MESSAGE_TEXT = "messageText";
-    public static final String COLUMN_MESSAGE_CONTACT = "messageContact";
-    public static final String COLUMN_MESSAGE_SENDER_NAME = "messageSenderName";
-    public static final String COLUMN_MESSAGE_TIMESTAMP = "messageTimestamp";
+    private static final String TABLE_MESSAGE = "message";
+    private static final String COLUMN_MESSAGE_ID = "_messageID";
+    private static final String COLUMN_MESSAGE_TEXT = "messageText";
+    private static final String COLUMN_MESSAGE_CONTACT = "messageContact";
+    private static final String COLUMN_MESSAGE_SENDER_NAME = "messageSenderName";
+    private static final String COLUMN_MESSAGE_TIMESTAMP = "messageTimestamp";
 
 
-    public static final String TABLE_USER = "user";
-    public static final String COLUMN_USER_ID = "_userID";
-    public static final String COLUMN_USER_NAME = "userName";
-    public static final String COLUMN_USER_NUMBER = "userNumber";
-    public static final String COLUMN_USER_IMAGE = "userImage";
+    private static final String TABLE_USER = "user";
+    private static final String COLUMN_USER_ID = "_userID";
+    private static final String COLUMN_USER_NAME = "userName";
+    private static final String COLUMN_USER_NUMBER = "userNumber";
+    private static final String COLUMN_USER_IMAGE = "userImage";
 
-    public static final String TABLE_CONTACT = "contact";
-    public static final String COLUMN_CONTACT_ID = "contactID";
-    public static final String COLUMN_CONTACT_NAME = "contactName";
-    public static final String COLUMN_CONTACT_NUMBER = "contactNumber";
-    public static final String COLUMN_CONTACT_IMAGE = "contactImage";
+    private static final String TABLE_CONTACT = "contact";
+    private static final String COLUMN_CONTACT_ID = "contactID";
+    private static final String COLUMN_CONTACT_NAME = "contactName";
+    private static final String COLUMN_CONTACT_NUMBER = "contactNumber";
+    private static final String COLUMN_CONTACT_IMAGE = "contactImage";
 
 
     private Tools t = new Tools() {
