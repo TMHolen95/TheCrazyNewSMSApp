@@ -5,7 +5,7 @@
  */
 package com.tmholen.messagingserver.controllers;
 
-import com.tmholen.messagingserver.database.CreateAccount;
+import com.tmholen.messagingserver.sessions.AccountSession;
 import com.tmholen.messagingserver.entities.Account;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -33,35 +33,38 @@ import lombok.NoArgsConstructor;
 @RequestScoped
 public class AccountController {
 
-    @Resource(name = "jdbc/chat")
+    @Resource(name = "jdbc/messaging")
     DataSource ds;
-    CreateAccount ca = new CreateAccount("TMH", "91367954", "Blank");
     List<Account> accounts;
 
-//    public List<Account> getAccounts() {
-//        if (accounts == null) {
-//            accounts = new ArrayList<>();
-//
-//            try (
-//                    Connection c = ds.getConnection();
-//                    Statement s = c.createStatement();) {
-//                ResultSet rs = s.executeQuery("select account_id,name,phone from customer order by name");
-//                while(rs.next()){
-//                    //accounts.add(new Account(rs.get))
-//                }
-//            }catch(SQLException e){
-//                
-//            }
-//        }
-//
-//    }
-    
-    @Data @AllArgsConstructor @NoArgsConstructor
-    @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
-    public static class Account implements Serializable{
-        long accountId;
-        String accountName;
-        String accountNumber;
-        String accountImage;
+    public List<Account> getAccounts() {
+        if (accounts == null) {
+            accounts = new ArrayList<>();
+
+            try (
+                    Connection c = ds.getConnection();
+                    Statement s = c.createStatement();) {
+
+                ResultSet rs = s.executeQuery("select id,name,number from Account order by id");
+                accounts.add(new Account(rs.getLong("id"), rs.getString("name"), rs.getString("number"), rs.getString("image"), rs.getString("password")));
+
+            } catch (SQLException e) {
+                System.out.println(e.getSQLState());
+            }
+        }
+        return accounts;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @XmlRootElement
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class Account implements Serializable {
+        long id;
+        String name;
+        String number;
+        String image;
+        String password;
     }
 }

@@ -17,10 +17,10 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/service")
 public class RestConfiguration extends Application {
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        final Set<Class<?>> classes = new HashSet<>();
-        classes.add(ChatService.class);
-        return classes;
-    }
+//    @Override
+//    public Set<Class<?>> getClasses() {
+//        final Set<Class<?>> classes = new HashSet<>();
+//        classes.add(ChatService.class);
+//        return classes;
+//    }
 }

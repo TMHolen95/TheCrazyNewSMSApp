@@ -19,46 +19,48 @@ public class Account implements Serializable {
     @GeneratedValue
     Long accountId;
 
-    String accountName;
-    String accountNumber;
-    String accountImage;
+    String name;
+    String number;
+    String image;
+    String password;
 
     public Account() {
 
     }
 
-    public Account(String accountName, String accountNumber, String accountImage) {
-        this.accountName = accountName;
-        this.accountNumber = accountNumber;
-        this.accountImage = accountImage;
+    public Account(String name, String number, String image, String password) {
+        this.name = name;
+        this.number = number;
+        this.image = image;
+        this.password = password;
     }
 
-    public Long getAccountId() {
+    public Long getId() {
         return accountId;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getName() {
+        return name;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setName(String accountName) {
+        this.name = accountName;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setNumber(String accountNumber) {
+        this.number = accountNumber;
     }
 
-    public String getAccountImage() {
-        return accountImage;
+    public String getImage() {
+        return image;
     }
 
-    public void setAccountImage(String accountImage) {
-        this.accountImage = accountImage;
+    public void setImage(String accountImage) {
+        this.image = accountImage;
     }
 
 }
