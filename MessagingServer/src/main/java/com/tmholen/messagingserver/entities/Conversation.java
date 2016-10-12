@@ -16,12 +16,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 public class Conversation implements Serializable {
     @Id @GeneratedValue
-    Long conversationId;
+    Long id;
     
     // Data fields
     @OneToMany
-    List<Account> conversationAccountRecipients;
+    List<Account> accountRecipients;
     
     @OneToMany
-    List<Message> conversationMessages;
+    List<Message> messages;
 }

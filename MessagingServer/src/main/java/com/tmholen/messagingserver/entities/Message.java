@@ -17,14 +17,14 @@ public class Message implements Serializable {
     
     // Identification fields
     @Id @GeneratedValue
-    Long messageId;
+    Long id;
     
     @ManyToOne
-    Conversation messageConversation;
+    Conversation conversation;
 
     // Data fields
     @OneToOne
-    Account messageSender;
-    String messageText;
+    Account sender;
+    String text;
     Long messageTimestamp;
 }

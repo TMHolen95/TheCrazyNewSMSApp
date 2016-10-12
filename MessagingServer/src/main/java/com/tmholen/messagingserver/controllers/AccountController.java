@@ -33,10 +33,9 @@ import lombok.NoArgsConstructor;
 @RequestScoped
 public class AccountController {
 
-    @Resource(name = "jdbc/messaging")
+    @Resource(name = "jdbc/chat")
     DataSource ds;
     List<Account> accounts;
-
     public List<Account> getAccounts() {
         if (accounts == null) {
             accounts = new ArrayList<>();
@@ -45,8 +44,10 @@ public class AccountController {
                     Connection c = ds.getConnection();
                     Statement s = c.createStatement();) {
 
-                ResultSet rs = s.executeQuery("select id,name,number from Account order by id");
-                accounts.add(new Account(rs.getLong("id"), rs.getString("name"), rs.getString("number"), rs.getString("image"), rs.getString("password")));
+                ResultSet rs = s.executeQuery("SELECT * FROM ACCOUNT ORDER BY ID");
+                while (rs.next()) {
+                    accounts.add(new Account(rs.getLong("id"), rs.getString("name"), rs.getString("number"), rs.getString("image"), rs.getString("password")));
+                }
 
             } catch (SQLException e) {
                 System.out.println(e.getSQLState());
@@ -61,6 +62,7 @@ public class AccountController {
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Account implements Serializable {
+
         long id;
         String name;
         String number;

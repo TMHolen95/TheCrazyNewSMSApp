@@ -2,6 +2,7 @@ package com.tmholen.messagingserver.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import static javax.persistence.GenerationType.SEQUENCE;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Tor-Martin Holen <tormartin.holen@gmail.com>
  */
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
@@ -17,7 +19,7 @@ public class Account implements Serializable {
 
     @Id
     @GeneratedValue
-    Long accountId;
+    Long id;
 
     String name;
     String number;
@@ -36,7 +38,7 @@ public class Account implements Serializable {
     }
 
     public Long getId() {
-        return accountId;
+        return id;
     }
 
     public String getName() {
