@@ -29,13 +29,14 @@ import lombok.NoArgsConstructor;
  *
  * @author Tor-Martin Holen <tormartin.holen@gmail.com>
  */
-@Named
+@Named("accountcontroller")
 @RequestScoped
 public class AccountController {
 
     @Resource(name = "jdbc/chat")
     DataSource ds;
     List<Account> accounts;
+
     public List<Account> getAccounts() {
         if (accounts == null) {
             accounts = new ArrayList<>();
@@ -48,6 +49,24 @@ public class AccountController {
                 while (rs.next()) {
                     accounts.add(new Account(rs.getLong("id"), rs.getString("name"), rs.getString("number"), rs.getString("image"), rs.getString("password")));
                 }
+
+            } catch (SQLException e) {
+                System.out.println(e.getSQLState());
+            }
+        }
+        return accounts;
+    }
+
+    public List<Account> getAccountById(Long id) {
+        if (accounts == null) {
+            accounts = new ArrayList<>();
+
+            try (
+                    Connection c = ds.getConnection();
+                    Statement s = c.createStatement();) {
+
+                ResultSet rs = s.executeQuery("SELECT * FROM ACCOUNT WHERE ID=" + id);
+                accounts.add(new Account(rs.getLong("id"), rs.getString("name"), rs.getString("number"), rs.getString("image"), rs.getString("password")));
 
             } catch (SQLException e) {
                 System.out.println(e.getSQLState());

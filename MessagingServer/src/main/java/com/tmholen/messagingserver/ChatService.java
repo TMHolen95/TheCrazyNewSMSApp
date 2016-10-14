@@ -2,7 +2,13 @@ package com.tmholen.messagingserver;
 
 import com.tmholen.messagingserver.controllers.AccountController;
 import com.tmholen.messagingserver.controllers.AccountController.Account;
+import com.tmholen.messagingserver.controllers.ConversationController;
+import com.tmholen.messagingserver.controllers.ConversationController.Conversation;
+import com.tmholen.messagingserver.controllers.MessageController;
+import com.tmholen.messagingserver.controllers.MessageController.Message;
 import com.tmholen.messagingserver.sessions.AccountSession;
+import com.tmholen.messagingserver.sessions.ConversationSession;
+import com.tmholen.messagingserver.sessions.MessageSession;
 import java.io.Serializable;
 
 import java.util.List;
@@ -28,41 +34,48 @@ import lombok.NoArgsConstructor;
  * @author Tor-Martin Holen <tormartin.holen@gmail.com>
  */
 @Stateless
+    @Produces(value = MediaType.APPLICATION_JSON)
 @Path("chat")
 public class ChatService {
 
     @EJB
     private AccountSession accountSession;
-
     @Inject
-    AccountController accountController;
+    private AccountController accountController;
 
     @GET
-    @Produces(value = MediaType.APPLICATION_JSON)
     @Path("accounts")
     public List<Account> getAccounts() {
-
         return accountController.getAccounts();
     }
 
-//    @GET
-//    @Path("messages")
-//    public List<Message> getMessage() {
-//        
-//    }
-//
-//    @GET
-//    @Path("conversations")
-//    public Conversation getConversation() {
-//        
-//    }
+    @EJB
+    private MessageSession messageSession;
+    @Inject
+    private MessageController messageController;
+
+    @GET
+    @Path("messages")
+    public List<Message> getMessages() {
+        return messageController.getMessages();
+    }
+
+    @EJB
+    private ConversationSession conversationSession;
+    @Inject
+    private ConversationController conversationController;
+
+    @GET
+    @Path("conversations")
+    public List<Conversation> getConversations() {
+        return conversationController.getConversations();
+    }
+
     @Path("testdata")
     @Produces(value = MediaType.APPLICATION_JSON)
     public Account insertTestdata() {
-        accountSession.insertTestAccounts();
+        Testdata t = new Testdata(accountSession, messageSession, conversationSession);
         return new AccountController.Account();
     }
-    
-    
 
 }

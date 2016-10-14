@@ -9,8 +9,6 @@ import com.tmholen.messagingserver.entities.Account;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -31,14 +29,19 @@ public class AccountSession {
         return em.createQuery("SELECT a from Account a").getResultList();
     }
 
+    @GET
+    public Account getAccountById(Long accId) {
+        return (Account) em.createQuery("SELECT a from Account a WHERE a.id = :accId").setParameter("accId", accId).getSingleResult();
+    }
+
+    @GET
+    public Account getAccountByNumber(String number) {
+        return (Account) em.createQuery("SELECT a from Account a WHERE a.number = :number").setParameter("number", number).getSingleResult();
+    }
+    
     public boolean createAccount(Account account) {
         em.persist(account);
         return true;
     }
 
-    public void insertTestAccounts() {
-        createAccount(new Account("Tor-Martin Holen", "91367954", "Blank", "MightyPassword"));
-        createAccount(new Account("Jeff Hudson", "41569822", "Blank", "1234"));
-        createAccount(new Account("Barry Allan", "90874454", "Blank", "Pw"));
-    }
 }

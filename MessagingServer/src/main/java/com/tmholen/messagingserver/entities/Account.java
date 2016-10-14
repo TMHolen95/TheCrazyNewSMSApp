@@ -1,11 +1,13 @@
 package com.tmholen.messagingserver.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
-import static javax.persistence.GenerationType.SEQUENCE;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
@@ -22,10 +24,19 @@ public class Account implements Serializable {
     Long id;
 
     String name;
+    
+    @Column(unique = true)
     String number;
     String image;
     String password;
+    
+    @OneToOne
+    Contactlist contacts;
 
+    @XmlTransient
+    @OneToMany (cascade = CascadeType.ALL)
+    List<Conversation> conversations;
+    
     public Account() {
 
     }
@@ -65,4 +76,17 @@ public class Account implements Serializable {
         this.image = accountImage;
     }
 
+    public static class AccountAdapter extends XmlAdapter<Long, Account>{
+
+        @Override
+        public Account unmarshal(Long v) throws Exception {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Long marshal(Account v) throws Exception {
+            return v != null ? v.getId() : null;
+        }
+        
+    }
 }

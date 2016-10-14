@@ -1,11 +1,13 @@
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\RestConfiguration.java
-C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\ChatService.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\controllers\AccountController.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\controllers\MessageController.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\controllers\ConversationController.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\entities\Conversation.java
-C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\sessions\MessageSession.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\sessions\AccountSession.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\sessions\ConversationSession.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\entities\Message.java
+C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\entities\Contactlist.java
+C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\ChatService.java
+C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\sessions\MessageSession.java
+C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\Testdata.java
 C:\Users\dogsh\OneDrive\Projects\Android\TheCrazyNewSMSApp\MessagingServer\src\main\java\com\tmholen\messagingserver\entities\Account.java
