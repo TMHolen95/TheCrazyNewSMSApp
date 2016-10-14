@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -29,12 +30,9 @@ public class Account implements Serializable {
     String number;
     String image;
     String password;
-    
-    @OneToOne
-    Contactlist contacts;
 
-    @XmlTransient
-    @OneToMany (cascade = CascadeType.ALL)
+    @XmlJavaTypeAdapter (AccountAdapter.class)
+    @ManyToMany (/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
     List<Conversation> conversations;
     
     public Account() {
