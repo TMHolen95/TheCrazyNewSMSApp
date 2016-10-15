@@ -14,27 +14,27 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author Tor-Martin Holen <tormartin.holen@gmail.com>
  */
-
+@SequenceGenerator(name = "seqaccount", initialValue = 1)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 public class Account implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqaccount")
     Long id;
 
     String name;
-    
+
     @Column(unique = true)
     String number;
     String image;
     String password;
 
-    @XmlJavaTypeAdapter (AccountAdapter.class)
-    @ManyToMany (/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
+    @XmlJavaTypeAdapter(AccountAdapter.class)
+    @ManyToMany(/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
     List<Conversation> conversations;
-    
+
     public Account() {
 
     }
@@ -74,7 +74,23 @@ public class Account implements Serializable {
         this.image = accountImage;
     }
 
-    public static class AccountAdapter extends XmlAdapter<Long, Account>{
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(List<Conversation> conversations) {
+        this.conversations = conversations;
+    }
+
+    public static class AccountAdapter extends XmlAdapter<Long, Account> {
 
         @Override
         public Account unmarshal(Long v) throws Exception {
@@ -85,6 +101,6 @@ public class Account implements Serializable {
         public Long marshal(Account v) throws Exception {
             return v != null ? v.getId() : null;
         }
-        
+
     }
 }

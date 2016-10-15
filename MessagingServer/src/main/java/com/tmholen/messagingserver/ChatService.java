@@ -1,5 +1,6 @@
 package com.tmholen.messagingserver;
 
+import com.sun.istack.internal.Nullable;
 import com.tmholen.messagingserver.entities.Account;
 import com.tmholen.messagingserver.entities.Conversation;
 import com.tmholen.messagingserver.entities.Message;
@@ -32,19 +33,37 @@ public class ChatService {
         return em.createQuery("SELECT a from Account a").getResultList();
     }
 
-
-    public Account getAccountById(Long accId) {
-        return (com.tmholen.messagingserver.entities.Account) em.createQuery("SELECT a from Account a WHERE a.id = :accId").setParameter("accId", accId).getSingleResult();
+    public Account getAccountById(Long accountId) {
+        return (com.tmholen.messagingserver.entities.Account) em.createQuery("SELECT a from Account a WHERE a.id = :accountId").setParameter("accountId", accountId).getSingleResult();
     }
-
 
     public Account getAccountByNumber(String number) {
         return (com.tmholen.messagingserver.entities.Account) em.createQuery("SELECT a from Account a WHERE a.number = :number").setParameter("number", number).getSingleResult();
     }
 
-    public boolean createAccount(Account account) {
+    public Account createAccount(Account account) {
         em.persist(account);
-        return true;
+        return account;
+    }
+
+    public void addAccountConversation(Long accountId, Conversation conversation) {
+        Account account = getAccountById(accountId);
+        List<Conversation> conversations = account.getConversations();
+        conversations.add(conversation);
+        account.setConversations(conversations);
+    }
+
+    public void addAccountConversation(String accountNumber, Conversation conversation) {
+        Account account = getAccountByNumber(accountNumber);
+        List<Conversation> conversations = account.getConversations();
+        conversations.add(conversation);
+        account.setConversations(conversations);
+    }
+
+    public void addAccountConversation(Account account, Conversation conversation) {
+        List<Conversation> conversations = account.getConversations();
+        conversations.add(conversation);
+        account.setConversations(conversations);
     }
 
     @GET
@@ -57,9 +76,9 @@ public class ChatService {
         return (Message) em.createQuery("SELECT m from Message m WHERE m.id = :msgId").setParameter("msgId", msgId).getSingleResult();
     }
 
-    public boolean createMessage(Message message) {
+    public Message createMessage(Message message) {
         em.persist(message);
-        return true;
+        return message;
     }
 
     @GET
@@ -72,14 +91,31 @@ public class ChatService {
         return (Conversation) em.createQuery("SELECT c from Conversation c WHERE c.id = :convId").setParameter("convId", convId).getSingleResult();
     }
 
-    public boolean createConversation(Conversation conversation) {
+    public Conversation createConversation(Conversation conversation) {
         em.persist(conversation);
-        return true;
+        return conversation;
     }
 
-    public void updateConversation(Conversation conversation, List<Account> res, List<Message> msg) {
-        conversation.setRecipients(res);
-        conversation.setMessages(msg);
+    public void updateConversation(Conversation conversation, @Nullable List<Account> newRecipients, @Nullable List<Message> newMessages) {
+        List<Account> recipientsList = conversation.getRecipients();
+        List<Message> messageList = conversation.getMessages();
+
+        if (newRecipients != null) {
+            for (int i = 0; i < newRecipients.size(); i++) {
+                Account account = newRecipients.get(i);
+                addAccountConversation(account, conversation);
+                recipientsList.add(account);
+            }
+            conversation.setRecipients(recipientsList);
+        }
+
+        if (newMessages != null) {
+            for (int i = 0; i < newMessages.size(); i++) {
+                Message message = newMessages.get(i);
+                messageList.add(message);
+            }
+            conversation.setMessages(messageList);
+        }
     }
 
     @GET
@@ -90,27 +126,31 @@ public class ChatService {
         createAccount(new Account("Barry Allan", "90874454", "Blank", "Pw"));
 
         createConversation(new Conversation());
-        return new Account();
-    }
-    
-    @GET
-    @Path("testdata2")
-    public Account insertTestdata2(){
-        createMessage(new Message(getAllConversations().get(0), getAllAccounts().get(0), "Hello"));
-        createMessage(new Message(getAllConversations().get(0), getAllAccounts().get(1), "Hey, whats up?"));
-        
-        return new Account();
-    }
-    
-    @GET
-    @Path("testdata3")
-    public Account insertTestdata3(){
+
+        createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Hello"));
+        createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(1).getId(), "Hey, whats up?"));
+
         updateConversation(getAllConversations().get(0), getAllAccounts(), getAllMessages());
-        
+
         return new Account();
     }
 
-    
+    @GET
+    @Path("testdata2")
+    public Account insertTestdata2(){
+        
+        Message m = createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Nothing much, just coding like a pro!"));
+        updateConversation(getAllConversations().get(0), null, Arrays.asList(m));
+        return new Account();
+    }
+//    
+//    @GET
+//    @Path("testdata3")
+//    public Account insertTestdata3(){
+//        updateConversation(getAllConversations().get(0), getAllAccounts(), getAllMessages());
+//        
+//        return new Account();
+//    }
 //        @Resource(name = "jdbc/chat")
 //    DataSource ds;
 //    List<Message> messages;

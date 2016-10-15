@@ -14,17 +14,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author Tor-Martin Holen <tormartin.holen@gmail.com>
  */
+@SequenceGenerator(name="seqconversation", initialValue=1)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 public class Conversation implements Serializable {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqconversation")
     Long id;
     
     @OneToMany (cascade = CascadeType.ALL)
     List<Message> messages;
     
-    @XmlTransient
+    //@XmlTransient
     @XmlJavaTypeAdapter (AccountAdapter.class)
     @ManyToMany (/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
     List<Account> recipients;
