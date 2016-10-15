@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
-import com.tmholen.thecrazynewsmsapp.database.Database;
+
 import com.tmholen.thecrazynewsmsapp.datastructures.Contact;
 import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
 

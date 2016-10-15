@@ -12,27 +12,27 @@ import java.io.Serializable;
  */
 
 public class Contact implements Serializable {
-    private int contactId;
+    private Long contactId;
     private String contactImageUriAsString;
     private String contactName;
     private String contactNumber;
     private Tools t = new Tools(){};
 
-    public Contact(int contactId,String contactName, String contactNumber, String contactImageUri) {
+    public Contact(Long contactId,String contactName, String contactNumber, String contactImageUri) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
         this.contactImageUriAsString = contactImageUri;
     }
 
-    public Contact(int contactId, String contactName, String contactNumber) {
+    public Contact(Long contactId, String contactName, String contactNumber) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = contactNumber;
         contactImageUriAsString = t.ParseResourceToUriString(R.drawable.ic_person_missing_photo);
     }
 
-    public Contact(int contactId,String contactName) {
+    public Contact(Long contactId,String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.contactNumber = "Unknown";

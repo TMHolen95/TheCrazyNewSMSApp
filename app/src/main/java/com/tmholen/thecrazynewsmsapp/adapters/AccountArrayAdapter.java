@@ -12,43 +12,45 @@ import android.widget.TextView;
 
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.Tools;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.datastructures.Contact;
 
 import java.util.List;
 
 /**
- * Created by dogsh on 02-Sep-16.
+ * Created by dogsh on 15-Oct-16.
  */
 
-public class ContactArrayAdapter extends ArrayAdapter<Contact> {
-    public ContactArrayAdapter(Context context, List<Contact> contacts) {
-        super(context, 0, contacts);
+public class AccountArrayAdapter extends ArrayAdapter<LoadAccounts.Account> {
+
+    public AccountArrayAdapter(Context context, List<LoadAccounts.Account> accounts) {
+        super(context, 0, accounts);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        Contact contact = getItem(position);
+        LoadAccounts.Account account = getItem(position);
         Tools t = new Tools(){};
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_contact, parent, false);
         }
 
         ImageView contactImage = (ImageView) convertView.findViewById(R.id.contactImage);
-        contactImage.setImageURI(t.ParseResourceToUri(contact.getContactImageUriAsString()));
+        contactImage.setImageURI(t.ParseMissingImageToUri());
 
         TextView contactName = (TextView) convertView.findViewById(R.id.contactName);
-        contactName.setText(contact.getContactName());
+        contactName.setText(account.getName());
 
         TextView contactNumber = (TextView) convertView.findViewById(R.id.contactNumber);
-        contactNumber.setText(contact.getContactNumber());
+        contactNumber.setText(account.getNumber());
 
         return convertView;
     }
 
     @Nullable
     @Override
-    public Contact getItem(int position) {
+    public LoadAccounts.Account getItem(int position) {
         return super.getItem(position);
     }
 }

@@ -34,15 +34,11 @@ public class Conversation implements Serializable {
     public Conversation() {
     }
     
-    public Conversation(List<Account> recipients, List<Message> messages) {
-        this.recipients = recipients;
-        this.messages = messages;
-    }
-    
-    public Conversation(List<Account> recipients, List<Message> messages, Account owner) {
-        this.recipients = recipients;
-        this.messages = messages;
-    }
+//    public Conversation(List<Account> recipients, List<Message> messages) {
+//        this.recipients = recipients;
+//        this.messages = messages;
+//    }
+//    
 
     public Long getId() {
         return id;

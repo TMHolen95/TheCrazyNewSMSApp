@@ -34,6 +34,14 @@ public abstract class Tools {
         return "android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_person_missing_photo;
     }
 
+    public Uri ParseMissingImageToUri(){
+        return Uri.parse("android.resource://com.tmholen.thecrazynewsmsapp/" + R.drawable.ic_person_missing_photo);
+    }
+
+    public Calendar getCalendarFromTimestamp(Long timestampInLong){
+        Calendar timestamp = Calendar.getInstance();
+        timestamp.setTimeInMillis(timestampInLong);
+    }
 
     public String getRelevantStringDate(Calendar timestamp){
         String result;

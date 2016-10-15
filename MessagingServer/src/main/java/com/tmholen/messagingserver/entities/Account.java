@@ -30,10 +30,8 @@ public class Account implements Serializable {
     String number;
     String image;
     String password;
-
-    @XmlJavaTypeAdapter(AccountAdapter.class)
-    @ManyToMany(/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
-    List<Conversation> conversations;
+    
+    List<Long> conversationIds;
 
     public Account() {
 
@@ -82,12 +80,12 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-    public List<Conversation> getConversations() {
-        return conversations;
+    public List<Long> getConversationIds() {
+        return conversationIds;
     }
 
-    public void setConversations(List<Conversation> conversations) {
-        this.conversations = conversations;
+    public void setConversationIds(List<Long> conversationIds) {
+        this.conversationIds = conversationIds;
     }
 
     public static class AccountAdapter extends XmlAdapter<Long, Account> {

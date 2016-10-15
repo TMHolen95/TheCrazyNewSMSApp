@@ -1,3 +1,4 @@
+/*
 package com.tmholen.thecrazynewsmsapp.database;
 
 import android.content.ContentResolver;
@@ -15,9 +16,11 @@ import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+*/
 /**
  * Created by dogsh on 17-Sep-16.
- */
+ *//*
+
 
 public class Database extends SQLiteOpenHelper {
 
@@ -336,3 +339,4 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 }
+*/

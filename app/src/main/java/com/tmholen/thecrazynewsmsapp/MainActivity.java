@@ -1,39 +1,33 @@
 package com.tmholen.thecrazynewsmsapp;
 
 import android.Manifest;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.tmholen.thecrazynewsmsapp.adapters.AccountArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.adapters.DialogArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.datastructures.Contact;
-import com.tmholen.thecrazynewsmsapp.adapters.ContactArrayAdapter;
-import com.tmholen.thecrazynewsmsapp.datastructures.Dialog;
-import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import com.tmholen.thecrazynewsmsapp.database.Database;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView entryList;
@@ -43,10 +37,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private NavigationView navigationView;
 
-    private ContactArrayAdapter contactArrayAdapter;
+    private AccountArrayAdapter accountArrayAdapter;
     private DialogArrayAdapter dialogArrayAdapter;
     private MenuItem previousItem;
-    private Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,42 +49,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         AddDefaultNavigationActivityElementsToScreen();
         permissions = new PermissionHandler(this, this);
+        //Log.i("Testing tag", "onCreate");
 
-
-        permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
+/*        permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
 
         if(permissions.permissionGranted(Manifest.permission.WRITE_CONTACTS)){
-            db = new Database(getApplicationContext(), null);
-            db.onUpgrade(db.getWritableDatabase(), 1, 1);
-            addTestDataToDB();
-            DisplayMessageData();
+
         }else{
             DisplayMissingPermissionData();
-        }
+        }*/
+
+        new LoadAccounts(
+                new LoadAccounts.Callback() {
+                    @Override
+                    public void update(List<LoadAccounts.Account> accounts) {
+
+                        Collections.sort(accounts, LoadAccounts.accountComparator);
+                        /*List<Contact> contactList = new ArrayList<>();
+
+                        for (int i = 0; i < accounts.size(); i++) {
+                            LoadAccounts.Account a = accounts.get(i);
+                            Contact c = new Contact(a.getId(), a.getName(), a.getNumber());
+                            contactList.add(c);
+                        }*/
+
+                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), accounts);
+                        entryList.setAdapter(accountArrayAdapter);
+                        accountArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
+
+/*
+        new LoadMessages(
+                new LoadMessages().Callback() {
+                    @Override
+                    public void update(List<Message> messages) {
+
+                        */
+/*Collections.sort(messages, LoadAccounts.accountComparator);*//*
+
+                        List<Contact> contactList = new ArrayList<>();
+
+                        for (int i = 0; i < messages.size(); i++) {
+                            LoadAccounts.Account a = messages.get(i);
+                            Contact c = new Contact(a.getId(), a.getName(), a.getNumber());
+                            contactList.add(c);
+                        }
+
+                        accountArrayAdapter = new ContactArrayAdapter(getApplicationContext(), contactList);
+                        entryList.setAdapter(accountArrayAdapter);
+                        accountArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
+*/
+
 
     }
 
-    private void addTestDataToDB() {
-        db.addUser("Tor-Martin Holen", "+47 913 67 954"); //Don't add more than one user, as of this time.
-        String user = db.getUserName();
-
-        db.ImportContactData(getContentResolver());
-        String c1 = "Mr. Testingson";
-        db.addDialog(new TextMessage(c1, "Hello", 1), c1);
-        db.updateDialog(new TextMessage(user, "Well....", 1));
-        db.updateDialog(new TextMessage(c1, "Goodbye, i don't have time for this", 1));
-
-        String c2 = "Shady person";
-        db.addDialog(new TextMessage(c2, "Candy is good", 2), c2);
-        db.updateDialog(new TextMessage(user, "Who are you....?", 2));
-        db.updateDialog(new TextMessage(c2, "Nobody, but there is free candy in my van", 2));
-
-        String c3 = "Acquaintance";
-        db.addDialog(new TextMessage(c3, "How is't going", 3), c3);
-        db.updateDialog(new TextMessage(user, "Good?", 3));
-        db.updateDialog(new TextMessage(c3, "That's good...", 3));
-
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -101,54 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void DisplayDialogData(){
-        ArrayList<Dialog> dialogs = db.getDialogMessages();
-        dialogArrayAdapter = new DialogArrayAdapter(this, dialogs);
-        displayNewListViewFragment(dialogArrayAdapter);
-    }
-
-    private void DisplayContactData() {
-        ArrayList<Contact> contacts = db.getContacts();
-        contactArrayAdapter = new ContactArrayAdapter(this, contacts);
-
-        displayNewListViewFragment(contactArrayAdapter);
-
-    }
-
-    private void DisplayMessageData() {
-
-        ArrayList<TextMessage> textMessages;
-        textMessages = db.getLastMessagesInDialogs();
-
-        messageArrayAdapter = new MessageArrayAdapter(this, textMessages);
-        displayNewListViewFragment(messageArrayAdapter);
-    }
-
-    private void displayNewListViewFragment(ArrayAdapter arrayAdapter) {
-        ListViewFragment listViewFragment = (ListViewFragment) getSupportFragmentManager().findFragmentById(R.id.listViewFragment);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.show(listViewFragment);
-        fragmentTransaction.commit();
-        listViewFragment.setListViewAdapter(arrayAdapter);
-        arrayAdapter.notifyDataSetChanged();
-    }
-
-    private void DisplayMessagingData(){
-        ArrayList<TextMessage> textMessages;
-        textMessages = db.getLastMessagesInDialogs();
-        messageArrayAdapter = new MessageArrayAdapter(this, textMessages);
-
-        displayNewMessagingFragment(messageArrayAdapter);
-    }
-
-    private void displayNewMessagingFragment(ArrayAdapter arrayAdapter) {
-        MessagingFragment messagingFragment = (MessagingFragment) getSupportFragmentManager().findFragmentById(R.id.messagingFragment);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.show(messagingFragment);
-        fragmentTransaction.commit();
-        messagingFragment.setListViewAdapter(arrayAdapter);
-        arrayAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onBackPressed() {
@@ -199,10 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case PERMISSION_REQUEST_CONTACTS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    db = new Database(getApplicationContext(), null);
-                    db.onUpgrade(db.getWritableDatabase(), 1, 1);
-                    addTestDataToDB();
-                    DisplayMessageData();
+
                 } else {
                     System.out.println("Permission denied");
                 }
@@ -238,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     public void EnableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -252,8 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -271,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         if (id == R.id.nav_message_screen) {
-            DisplayMessageData();
+            //DisplayMessageData();
 
         } else if (id == R.id.nav_contact_screen) {
             CheckPermissionBeforeDisplayingContacts();
@@ -298,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void CheckPermissionBeforeDisplayingContacts() {
         permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
         if (permissions.permissionGranted(Manifest.permission.WRITE_CONTACTS)) {
-            DisplayContactData();
+            //DisplayContactData();
         } else {
             DisplayMissingPermissionData();
             System.out.println("Missing permisssions...");
@@ -310,13 +272,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Tools t = new Tools() {
         };
 
-        error.add(new Contact(1, "You must grant this app access to your contacts",
+        error.add(new Contact(1L, "You must grant this app access to your contacts",
                 "Find app in phone settings if you clicked \"never show again\" in the permission dialog"
                 , t.ParseResourceToUriString(R.drawable.ic_error)));
-        contactArrayAdapter = new ContactArrayAdapter(this, error);
+        /*accountArrayAdapter = new ContactArrayAdapter(this, error);*/
 
-        displayNewListViewFragment(contactArrayAdapter);
+        //displayNewListViewFragment(accountArrayAdapter);
     }
 
+
+/*    public void ImportContactData(ContentResolver contentResolver) {
+        this.contentResolver = contentResolver;
+
+        Cursor c = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String name = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String photoUriString = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+
+            if (photoUriString != null) {
+
+                String query = "INSERT INTO " + TABLE_CONTACT + " (" + COLUMN_CONTACT_NAME + ", " + COLUMN_CONTACT_NUMBER + ", " + COLUMN_CONTACT_IMAGE + ") " +
+                        " VALUES ('" + name + "', '" + number + "', '" + photoUriString + "')";
+                getWritableDatabase().execSQL(query);
+            } else {
+                String query = "INSERT INTO " + TABLE_CONTACT + " (" + COLUMN_CONTACT_NAME + ", " + COLUMN_CONTACT_NUMBER + ", " + COLUMN_CONTACT_IMAGE + ") " +
+                        " VALUES ('" + name + "', '" + number + "', '" + t.ParseMissingImageToUriString() + "')";
+                getWritableDatabase().execSQL(query);
+            }
+            c.moveToNext();
+        }
+        c.close();
+    }*/
 
 }
