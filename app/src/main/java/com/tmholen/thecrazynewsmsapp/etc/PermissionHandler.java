@@ -1,4 +1,4 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.etc;
 
 import android.Manifest;
 import android.content.Context;

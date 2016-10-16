@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.tmholen.thecrazynewsmsapp.MainActivity">
+    tools:context="com.tmholen.thecrazynewsmsapp.activities.Conversations">
 
 
         <android.support.design.widget.AppBarLayout
@@ -22,7 +22,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/fragment_listview" />
+        <include layout="@layout/listview_content_screen" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -1,9 +1,7 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,83 +11,69 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
-import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
+import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dogsh on 18-Sep-16.
  */
 
 public class Messaging extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private ListView entryList;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private MenuItem previousItem;
-    private ArrayList<TextMessage> textMessage;
-    private MessageArrayAdapter messageAdapter;
+    /*private ArrayList<TextMessage> textMessage;*/
+    private MessageArrayAdapter messageArrayAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.messaging_content_screen);
+        setContentView(R.layout.activity_main_screens);
         AddDefaultNavigationActivityElementsToScreen();
+        entryList = (ListView) findViewById(R.id.entryListView);
 
-        textMessage = new ArrayList<>();
-        messageAdapter = new MessageArrayAdapter(this, textMessage);
+        new LoadMessages(
+                new LoadMessages.Callback() {
+                    @Override
+                    public void update(List<LoadMessages.Message> messages) {
+                        DownloadedDataHandler.getInstance().setMessages(messages);
+                        //Collections.sort(messages, LoadMessages.messageComparator);
+                        messageArrayAdapter = new MessageArrayAdapter(getApplicationContext(), messages);
+                        entryList.setAdapter(messageArrayAdapter);
+                        messageArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/messages");
 
-        final EditText editText = (EditText) findViewById(R.id.messageText);
-        ListView messageList = (ListView) findViewById(R.id.messagingListView);
-        messageList.setAdapter(messageAdapter);
-        ImageButton sendButton  = (ImageButton) findViewById(R.id.sendButton);
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                messageAdapter.add(addTextMessage(editText.getText().toString()));
-                messageAdapter.notifyDataSetChanged();
-                editText.setText("");
-            }
-        });
     }
 
-    private TextMessage addTextMessage(String message){
-        return new TextMessage("You", message, 1);
-    }
 
     public void AddDefaultNavigationActivityElementsToScreen() {
-        //EnableToolbar();
-        /*EnableNavigationDrawer();
-        FillNavigationDrawerMenu();*/
-        /*ShowFabButton();
+        EnableToolbar();
         EnableNavigationDrawer();
-        FillNavigationDrawerMenu();*/
+        FillNavigationDrawerMenu();
+        ShowFabButton();
+        EnableNavigationDrawer();
+        FillNavigationDrawerMenu();
     }
 
     public void EnableToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Chat with:" /*+ DownloadedDataHandler.getInstance().getAccountById()*/);
     }
 
 
     public void ShowFabButton() {
- /*       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                *//*Snackbar.make(view, "Select contact a contact to send a message", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                DisplayMessagingData();*//*
-                Intent i = new Intent(getApplicationContext(), Messaging.class);
-                startActivity(i);
-            }
-        });*/
+        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
     }
 
 

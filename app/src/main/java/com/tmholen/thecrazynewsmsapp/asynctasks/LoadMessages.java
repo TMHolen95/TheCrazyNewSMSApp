@@ -1,6 +1,7 @@
 package com.tmholen.thecrazynewsmsapp.asynctasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ import java.util.List;
 public class LoadMessages extends AsyncTask<String,Long,List<LoadMessages.Message>> {
 
     public interface Callback {
-        void update(List<Message> conversations);
+        void update(List<Message> messages);
     }
 
     Callback callback;
@@ -51,7 +53,6 @@ public class LoadMessages extends AsyncTask<String,Long,List<LoadMessages.Messag
                 connection.disconnect();
             }
         }
-
         return result;
 
     }
@@ -112,6 +113,12 @@ public class LoadMessages extends AsyncTask<String,Long,List<LoadMessages.Messag
             this.timestamp = timestamp;
         }
 
-
     }
+    public static Comparator<LoadMessages.Message> messageComparator = new Comparator<Message>() {
+        @Override
+        public int compare(Message m1, Message m2) {
+            return Long.compare(m1.getTimestamp(), m2.getTimestamp());
+        }
+
+    };
 }

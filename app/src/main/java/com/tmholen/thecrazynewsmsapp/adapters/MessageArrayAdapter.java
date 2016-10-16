@@ -2,6 +2,7 @@ package com.tmholen.thecrazynewsmsapp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tmholen.thecrazynewsmsapp.R;
-import com.tmholen.thecrazynewsmsapp.Tools;
+import com.tmholen.thecrazynewsmsapp.etc.Tools;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
-import com.tmholen.thecrazynewsmsapp.datastructures.TextMessage;
+import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,14 +23,14 @@ import java.util.List;
  */
 
 public class MessageArrayAdapter extends ArrayAdapter {
-    public MessageArrayAdapter(Context context, List<LoadMessages.Message> textMessages) {
-        super(context, 0, textMessages);
+    public MessageArrayAdapter(Context context, List<LoadMessages.Message> messages) {
+        super(context, 0, messages);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        LoadMessages.Message message = (LoadMessages.Message) getItem(position);
+        LoadMessages.Message message = getItem(position);
         Tools t = new Tools() {
         };
         if (convertView == null) {
@@ -40,16 +41,23 @@ public class MessageArrayAdapter extends ArrayAdapter {
         recipientImage.setImageURI(t.ParseMissingImageToUri());
 
         TextView recipientName = (TextView) convertView.findViewById(R.id.messageRecipient);
-        recipientName.setText(message.getSenderId());
+        LoadAccounts.Account recipient = DownloadedDataHandler.getInstance().getAccountById(message.getSenderId());
+        recipientName.setText(recipient.getName());
 
         TextView recipientMessage = (TextView) convertView.findViewById(R.id.message);
         recipientMessage.setText(message.getText());
 
         TextView recipientMessageTimestamp = (TextView) convertView.findViewById(R.id.messageTimestamp);
 
-        Calendar timestamp = t.getCalendarFromTimestamp(message.getTimestamp());
-        recipientMessageTimestamp.setText(t.getRelevantStringDate(timestamp));
+        /*Calendar timestamp = t.getCalendarFromTimestamp(message.getTimestamp());
+        recipientMessageTimestamp.setText(t.getRelevantStringDate(timestamp));*/
 
         return convertView;
+    }
+
+    @Nullable
+    @Override
+    public LoadMessages.Message getItem(int position) {
+        return (LoadMessages.Message) super.getItem(position);
     }
 }

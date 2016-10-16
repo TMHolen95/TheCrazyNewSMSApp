@@ -74,13 +74,33 @@ public class LoadAccounts extends AsyncTask<String,Long,List<LoadAccounts.Accoun
 
     public static class Account{
         Long id;
-
         String name;
         String number;
         String image;
         String password;
-
         List<Long> conversationIds;
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setNumber(String number) {
+            this.number = number;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+
 
         public Long getId() {
             return id;

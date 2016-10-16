@@ -1,8 +1,10 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.etc;
 
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.annotation.WorkerThread;
+
+import com.tmholen.thecrazynewsmsapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,7 +42,8 @@ public abstract class Tools {
 
     public Calendar getCalendarFromTimestamp(Long timestampInLong){
         Calendar timestamp = Calendar.getInstance();
-        timestamp.setTimeInMillis(timestampInLong);
+        timestamp.setTimeInMillis(timestampInLong.longValue());
+        return timestamp;
     }
 
     public String getRelevantStringDate(Calendar timestamp){

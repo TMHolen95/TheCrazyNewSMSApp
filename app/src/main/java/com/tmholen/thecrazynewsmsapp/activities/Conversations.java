@@ -1,4 +1,4 @@
-package com.tmholen.thecrazynewsmsapp;
+package com.tmholen.thecrazynewsmsapp.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,18 +18,20 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
+import com.tmholen.thecrazynewsmsapp.etc.PermissionHandler;
+import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.adapters.AccountArrayAdapter;
-import com.tmholen.thecrazynewsmsapp.adapters.DialogArrayAdapter;
+import com.tmholen.thecrazynewsmsapp.adapters.ConversationArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
-import com.tmholen.thecrazynewsmsapp.datastructures.Contact;
+import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Conversations extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView entryList;
     private static final int PERMISSION_REQUEST_CONTACTS = 1;
     private MessageArrayAdapter messageArrayAdapter;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private AccountArrayAdapter accountArrayAdapter;
-    private DialogArrayAdapter dialogArrayAdapter;
+    private ConversationArrayAdapter conversationArrayAdapter;
     private MenuItem previousItem;
 
     @Override
@@ -59,51 +61,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DisplayMissingPermissionData();
         }*/
 
+        /*new LoadConversations(
+                new LoadConversations.Callback() {
+                    @Override
+                    public void update(List<LoadConversations.Conversation> conversations) {
+                        *//*Collections.sort(conversations, LoadAccounts.accountComparator);*//*
+                        DownloadedDataHandler.getInstance().setConversations(conversations);
+                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DownloadedDataHandler.getInstance().getAccounts());
+                        entryList.setAdapter(accountArrayAdapter);
+                        accountArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/conversations");*/
+
         new LoadAccounts(
                 new LoadAccounts.Callback() {
                     @Override
                     public void update(List<LoadAccounts.Account> accounts) {
-
                         Collections.sort(accounts, LoadAccounts.accountComparator);
-                        /*List<Contact> contactList = new ArrayList<>();
-
-                        for (int i = 0; i < accounts.size(); i++) {
-                            LoadAccounts.Account a = accounts.get(i);
-                            Contact c = new Contact(a.getId(), a.getName(), a.getNumber());
-                            contactList.add(c);
-                        }*/
-
-                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), accounts);
+                        DownloadedDataHandler.getInstance().setAccounts(accounts);
+                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DownloadedDataHandler.getInstance().getAccounts());
                         entryList.setAdapter(accountArrayAdapter);
                         accountArrayAdapter.notifyDataSetChanged();
                     }
                 }
         ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
 
-/*
-        new LoadMessages(
-                new LoadMessages().Callback() {
-                    @Override
-                    public void update(List<Message> messages) {
 
-                        */
-/*Collections.sort(messages, LoadAccounts.accountComparator);*//*
 
-                        List<Contact> contactList = new ArrayList<>();
-
-                        for (int i = 0; i < messages.size(); i++) {
-                            LoadAccounts.Account a = messages.get(i);
-                            Contact c = new Contact(a.getId(), a.getName(), a.getNumber());
-                            contactList.add(c);
-                        }
-
-                        accountArrayAdapter = new ContactArrayAdapter(getApplicationContext(), contactList);
-                        entryList.setAdapter(accountArrayAdapter);
-                        accountArrayAdapter.notifyDataSetChanged();
-                    }
-                }
-        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
-*/
 
 
     }
@@ -184,7 +169,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void EnableToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Conversations");
         setSupportActionBar(toolbar);
+
     }
 
 
@@ -262,23 +249,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (permissions.permissionGranted(Manifest.permission.WRITE_CONTACTS)) {
             //DisplayContactData();
         } else {
-            DisplayMissingPermissionData();
             System.out.println("Missing permisssions...");
         }
     }
 
-    private void DisplayMissingPermissionData() {
-        ArrayList<Contact> error = new ArrayList<>();
-        Tools t = new Tools() {
-        };
-
-        error.add(new Contact(1L, "You must grant this app access to your contacts",
-                "Find app in phone settings if you clicked \"never show again\" in the permission dialog"
-                , t.ParseResourceToUriString(R.drawable.ic_error)));
-        /*accountArrayAdapter = new ContactArrayAdapter(this, error);*/
-
-        //displayNewListViewFragment(accountArrayAdapter);
-    }
 
 
 /*    public void ImportContactData(ContentResolver contentResolver) {

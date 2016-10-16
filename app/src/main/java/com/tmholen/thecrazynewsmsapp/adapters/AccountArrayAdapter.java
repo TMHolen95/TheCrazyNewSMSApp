@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tmholen.thecrazynewsmsapp.R;
-import com.tmholen.thecrazynewsmsapp.Tools;
+import com.tmholen.thecrazynewsmsapp.etc.Tools;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
-import com.tmholen.thecrazynewsmsapp.datastructures.Contact;
 
 import java.util.List;
 

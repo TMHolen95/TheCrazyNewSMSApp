@@ -8,7 +8,7 @@
             <item
                 android:id="@+id/nav_message_screen"
                 android:icon="@drawable/ic_message_menu"
-                android:title="Messages"
+                android:title="Conversations"
                 android:checked="true"/>
             <item
                 android:id="@+id/nav_contact_screen"

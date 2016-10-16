@@ -9,9 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tmholen.thecrazynewsmsapp.datastructures.Dialog;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
 import com.tmholen.thecrazynewsmsapp.R;
-import com.tmholen.thecrazynewsmsapp.Tools;
+import com.tmholen.thecrazynewsmsapp.etc.Tools;
 
 import java.util.List;
 
@@ -19,16 +19,16 @@ import java.util.List;
  * Created by dogsh on 18-Sep-16.
  */
 
-public class DialogArrayAdapter extends ArrayAdapter {
+public class ConversationArrayAdapter extends ArrayAdapter {
 
-    public DialogArrayAdapter(Context context, List<Dialog> dialogs) {
-        super(context, 0, dialogs);
+    public ConversationArrayAdapter(Context context, List<LoadConversations.Conversation> conversations) {
+        super(context, 0, conversations);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        Dialog dialog = (Dialog) getItem(position);
+        LoadConversations.Conversation conversation = (LoadConversations.Conversation) getItem(position);
         Tools t = new Tools(){};
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_message, parent, false);
@@ -38,13 +38,14 @@ public class DialogArrayAdapter extends ArrayAdapter {
         contactImage.setImageURI(t.ParseResourceToUri(R.drawable.ic_person_missing_photo));
 
         TextView contactName = (TextView) convertView.findViewById(R.id.messageRecipient);
-        contactName.setText(dialog.getContactName());
+        /*DownloadedDataHandler.getInstance().getConversationById(conversation.getId())
+        contactName.setText(conversation.getContactName());
 
         TextView lastMessage = (TextView) convertView.findViewById(R.id.message);
-        lastMessage.setText(dialog.getLastMessage());
+        lastMessage.setText(conversation.getLastMessage());
 
         TextView lastMessageTimestamp  = (TextView)  convertView.findViewById(R.id.messageTimestamp);
-        lastMessageTimestamp.setText(dialog.getTimestamp());
+        lastMessageTimestamp.setText(conversation.getTimestamp());*/
 
         return convertView;
     }
