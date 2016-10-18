@@ -1,6 +1,5 @@
 package com.tmholen.messagingserver;
 
-
 import com.tmholen.messagingserver.entities.Account;
 import com.tmholen.messagingserver.entities.Conversation;
 import com.tmholen.messagingserver.entities.Message;
@@ -36,10 +35,10 @@ public class ChatService {
 
     @GET
     @Path("accounts/{id}")
-    public List<Account> getAccount(@PathParam("id") Long accountId){
+    public List<Account> getAccount(@PathParam("id") Long accountId) {
         return em.createQuery("SELECT a from Account a WHERE a.id = :accountId").setParameter("accountId", accountId).getResultList();
     }
-    
+
     public Account getAccountById(Long accountId) {
         return (Account) em.createQuery("SELECT a from Account a WHERE a.id = :accountId").setParameter("accountId", accountId).getSingleResult();
     }
@@ -48,14 +47,14 @@ public class ChatService {
         return (Account) em.createQuery("SELECT a from Account a WHERE a.number = :number").setParameter("number", number).getSingleResult();
     }
 
-    public Account createAccount(Account account) {
+    public Account createTestAccount(Account account) {
         em.persist(account);
         return account;
     }
 
     public void addAccountConversation(Account account, Conversation conversation) {
         List<Long> conversationIds = account.getConversationIds();
-        if(conversationIds == null){
+        if (conversationIds == null) {
             conversationIds = new ArrayList<>();
         }
         conversationIds.add(conversation.getId());
@@ -80,10 +79,46 @@ public class ChatService {
         return (Message) em.createQuery("SELECT m from Message m WHERE m.id = :msgId").setParameter("msgId", msgId).getSingleResult();
     }
 
-    public Message createMessage(Message message) {
+    public Message createTestMessage(Message message) {
         em.persist(message);
         return message;
     }
+
+    @POST
+    @Path("messages/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Message createMessage(Message message) {
+        try {
+            em.persist(message);
+        } catch (NullPointerException e) {
+            System.out.println("com.tmholen.messagingserver.ChatService.sendMessage()");
+        }
+        return message;
+    }
+    
+    @POST
+    @Path("conversations/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Conversation createConversation(Conversation conversation) {
+        try {
+            em.persist(conversation);
+        } catch (NullPointerException e) {
+            System.out.println("com.tmholen.messagingserver.ChatService.sendMessage()");
+        }
+        return conversation;
+    }
+    
+    @POST
+    @Path("accounts/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Account createAccount(Account account) {
+        try {
+            em.persist(account);
+        } catch (NullPointerException e) {
+            System.out.println("com.tmholen.messagingserver.ChatService.sendMessage()");
+        }
+        return account;
+    }    
 
     @GET
     @Path("conversations")
@@ -95,7 +130,7 @@ public class ChatService {
         return (Conversation) em.createQuery("SELECT c from Conversation c WHERE c.id = :convId").setParameter("convId", convId).getSingleResult();
     }
 
-    public Conversation createConversation(Conversation conversation) {
+    public Conversation createTestConversation(Conversation conversation) {
         em.persist(conversation);
         return conversation;
     }
@@ -125,14 +160,14 @@ public class ChatService {
     @GET
     @Path("testdata1")
     public Account insertTestdata1() {
-        createAccount(new Account("Tor-Martin Holen", "91367954", "Blank", "MightyPassword"));
-        createAccount(new Account("Jeff Hudson", "41569822", "Blank", "1234"));
-        createAccount(new Account("Barry Allan", "90874454", "Blank", "Pw"));
+        createTestAccount(new Account("Tor-Martin Holen", "91367954", "Blank", "MightyPassword"));
+        createTestAccount(new Account("Jeff Hudson", "41569822", "Blank", "1234"));
+        createTestAccount(new Account("Barry Allan", "90874454", "Blank", "Pw"));
 
-        createConversation(new Conversation());
+        createTestConversation(new Conversation());
 
-        createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Hello"));
-        createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(1).getId(), "Hey, whats up?"));
+        createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Hello"));
+        createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(1).getId(), "Hey, whats up?"));
 
         updateConversation(getAllConversations().get(0), getAllAccounts(), getAllMessages());
 
@@ -143,10 +178,10 @@ public class ChatService {
     @Path("testdata2")
     public Account insertTestdata2() {
 
-        Message m = createMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Nothing much, just coding like a pro!"));
+        Message m = createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Nothing much, just coding like a pro!"));
         updateConversation(getAllConversations().get(0), null, Arrays.asList(m));
-        
-        createConversation(new Conversation());
+
+        createTestConversation(new Conversation());
         updateConversation(getConversationById(2L), getAllAccounts(), null);
         return new Account();
     }

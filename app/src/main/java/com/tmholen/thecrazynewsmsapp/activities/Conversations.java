@@ -1,7 +1,9 @@
 package com.tmholen.thecrazynewsmsapp.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,16 +34,18 @@ import java.util.List;
 
 
 public class Conversations extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private ListView entryList;
     private static final int PERMISSION_REQUEST_CONTACTS = 1;
-    private MessageArrayAdapter messageArrayAdapter;
-    private PermissionHandler permissions;
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+
+    private ListView entryList;
+    private ConversationArrayAdapter conversationArrayAdapter;
 
     private AccountArrayAdapter accountArrayAdapter;
-    private ConversationArrayAdapter conversationArrayAdapter;
+    private PermissionHandler permissions;
+
+    private Toolbar toolbar;
+    private NavigationView navigationView;
     private MenuItem previousItem;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,26 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
 
         AddDefaultNavigationActivityElementsToScreen();
         permissions = new PermissionHandler(this, this);
-        //Log.i("Testing tag", "onCreate");
+
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        if(sharedPreferences.getLong("id", -1L) != -1L){
+            new LoadAccounts(
+                    new LoadAccounts.Callback() {
+                        @Override
+                        public void update(List<LoadAccounts.Account> accounts) {
+                            Collections.sort(accounts, LoadAccounts.accountComparator);
+                            DownloadedDataHandler.getInstance().setAccounts(accounts);
+                            accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DownloadedDataHandler.getInstance().getAccounts());
+                            entryList.setAdapter(accountArrayAdapter);
+                            accountArrayAdapter.notifyDataSetChanged();
+                        }
+                    }
+            ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
+
+        }else{
+            Intent i = new Intent(getApplicationContext(), RegisterAccount.class);
+            startActivity(i);
+        }
 
 /*        permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
 
@@ -74,18 +97,6 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
                 }
         ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/conversations");*/
 
-        new LoadAccounts(
-                new LoadAccounts.Callback() {
-                    @Override
-                    public void update(List<LoadAccounts.Account> accounts) {
-                        Collections.sort(accounts, LoadAccounts.accountComparator);
-                        DownloadedDataHandler.getInstance().setAccounts(accounts);
-                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DownloadedDataHandler.getInstance().getAccounts());
-                        entryList.setAdapter(accountArrayAdapter);
-                        accountArrayAdapter.notifyDataSetChanged();
-                    }
-                }
-        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
 
 
 
@@ -97,9 +108,9 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (messageArrayAdapter != null) {
+/*        if (messageArrayAdapter != null) {
             messageArrayAdapter.notifyDataSetChanged();
-        }
+        }*/
     }
 
 
