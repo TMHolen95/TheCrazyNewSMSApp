@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
-import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
 import com.tmholen.thecrazynewsmsapp.asynctasks.PostAccount;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
  * Created by dogsh on 16-Oct-16.
  */
 
-public class RegisterAccount extends AppCompatActivity {
+public class AccountRegistration extends AppCompatActivity {
     private String errorMessage = "";
     private Boolean goToMainActivity = true;
 
@@ -36,9 +35,10 @@ public class RegisterAccount extends AppCompatActivity {
         final EditText fieldName = (EditText) findViewById(R.id.account_management_name);
         final EditText fieldNumber = (EditText) findViewById((R.id.account_management_number));
         final EditText fieldPassword = (EditText) findViewById((R.id.account_management_password));
-        final TextView textExplanation  = (TextView) findViewById(R.id.account_management_explanation);
+        final TextView textExplanation = (TextView) findViewById(R.id.account_management_explanation);
 
-        Button registerButton = (Button) findViewById(R.id.account_management_register_button);
+        Button registerButton = (Button) findViewById(R.id.account_management_button2);
+        registerButton.setText("Register");
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,12 +87,23 @@ public class RegisterAccount extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     textExplanation.setText(errorMessage);
                     textExplanation.setVisibility(View.VISIBLE);
+                    errorMessage = "";
                 }
 
 
+            }
+        });
+
+        Button loginScreenButton = (Button) findViewById(R.id.account_management_button1);
+        loginScreenButton.setText("Login screen");
+        loginScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), AccountLogin.class);
+                startActivity(i);
             }
         });
     }

@@ -34,11 +34,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.RegisterAccount"
+            android:name=".activities.AccountRegistration"
             android:label="Register Account"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
+        <activity
+            android:name=".activities.AccountLogin"
+            android:label="Register Account"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
     </application>

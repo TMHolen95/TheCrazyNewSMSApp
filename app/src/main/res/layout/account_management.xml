@@ -49,23 +49,14 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/account_management_name"
         android:hint="Full name"
         android:textColor="@color/textColorPrimary"
         android:layout_below="@+id/account_management_title"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Register"
-        android:textColor="@color/textColorPrimary"
-        android:id="@+id/account_management_register_button"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/account_management_explanation"
-        android:layout_centerHorizontal="true" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,5 +74,33 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/account_management_explanation"
          />
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:orientation="horizontal"
+    android:layout_below="@+id/account_management_explanation"
+    android:layout_marginTop="10dp"
+    >
+
+    <Button
+        android:id="@+id/account_management_button1"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/textColorPrimary"/>
+
+    <Button
+        android:id="@+id/account_management_button2"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/textColorPrimary" />
+
+
+</LinearLayout>
 
 </RelativeLayout>

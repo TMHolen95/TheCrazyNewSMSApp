@@ -12,6 +12,7 @@
 
     <color name="textColorPrimary">#eae9ea</color>
     <color name="textColorSub">#bbb5bd</color>
+    <color name="textColorLink">#c5c69f</color>
 
 
     <color name="navSelectedBackground">#7039313d</color>

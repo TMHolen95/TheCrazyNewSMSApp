@@ -20,12 +20,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
 import com.tmholen.thecrazynewsmsapp.etc.PermissionHandler;
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.adapters.AccountArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.adapters.ConversationArrayAdapter;
-import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
 
@@ -72,7 +70,7 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
             ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/accounts");
 
         }else{
-            Intent i = new Intent(getApplicationContext(), RegisterAccount.class);
+            Intent i = new Intent(getApplicationContext(), AccountRegistration.class);
             startActivity(i);
         }
 
