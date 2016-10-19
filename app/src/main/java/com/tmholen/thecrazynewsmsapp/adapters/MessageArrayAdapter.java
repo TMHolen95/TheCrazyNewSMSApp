@@ -14,7 +14,7 @@ import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.etc.Tools;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
-import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
+import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class MessageArrayAdapter extends ArrayAdapter {
         recipientImage.setImageURI(t.ParseMissingImageToUri());
 
         TextView recipientName = (TextView) convertView.findViewById(R.id.messageRecipient);
-        LoadAccounts.Account recipient = DownloadedDataHandler.getInstance().getAccountById(message.getSenderId());
+        LoadAccounts.Account recipient = DataHandler.getInstance().getAccountById(message.getSenderId());
         recipientName.setText(recipient.getName());
 
         TextView recipientMessage = (TextView) convertView.findViewById(R.id.message);

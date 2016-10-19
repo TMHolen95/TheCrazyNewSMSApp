@@ -1,5 +1,6 @@
 package com.tmholen.thecrazynewsmsapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
-import com.tmholen.thecrazynewsmsapp.data.DownloadedDataHandler;
+import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
                 new LoadMessages.Callback() {
                     @Override
                     public void update(List<LoadMessages.Message> messages) {
-                        DownloadedDataHandler.getInstance().setMessages(messages);
+                        DataHandler.getInstance().setMessages(messages);
                         //Collections.sort(messages, LoadMessages.messageComparator);
                         messageArrayAdapter = new MessageArrayAdapter(getApplicationContext(), messages);
                         entryList.setAdapter(messageArrayAdapter);
@@ -68,7 +69,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
     public void EnableToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Chat with:" /*+ DownloadedDataHandler.getInstance().getAccountById()*/);
+        toolbar.setTitle("Chat with:" /*+ DataHandler.getInstance().getAccountById()*/);
     }
 
 
@@ -110,7 +111,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
             //DisplayMessageData();
 
         } else if (id == R.id.nav_contact_screen) {
-            //CheckPermissionBeforeDisplayingContacts();
+            Toast.makeText(this, "Functionality in development.", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_account_info) {
             Toast.makeText(this, "Functionality in development.", Toast.LENGTH_SHORT).show();
@@ -133,7 +134,7 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.contact_screen, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -149,12 +150,19 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         if (id == R.id.action_search) {
 
             return true;
-        } else if (id == R.id.action_settings) {
+        } else if (id == R.id.action_logout) {
+            GoToLogin();
             return true;
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void GoToLogin(){
+        Intent i = new Intent(getApplicationContext(), AccountLogin.class);
+        startActivity(i);
+        finish();
     }
 
 }

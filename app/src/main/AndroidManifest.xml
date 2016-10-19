@@ -29,21 +29,21 @@
 
         <activity
             android:name=".activities.Messaging"
-            android:label="New Message"
+            android:label="Messages"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".activities.AccountRegistration"
-            android:label="Register Account"
-            android:launchMode="singleTask"
+            android:label="Account Registration"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
             android:name=".activities.AccountLogin"
-            android:label="Register Account"
-            android:launchMode="singleTask"
+            android:label="Account Login"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 

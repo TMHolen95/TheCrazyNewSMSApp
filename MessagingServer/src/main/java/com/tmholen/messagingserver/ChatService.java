@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,6 +38,14 @@ public class ChatService {
     @Path("accounts/{id}")
     public List<Account> getAccount(@PathParam("id") Long accountId) {
         return em.createQuery("SELECT a from Account a WHERE a.id = :accountId").setParameter("accountId", accountId).getResultList();
+    }
+    
+    @GET
+    @Path("login/{number}/{password}")
+    public List<Account> getAccount(@PathParam("number") String accountNumber, @PathParam("password") String accountPassword) {
+        Query query = em.createQuery("SELECT a from Account a WHERE a.number = :accountNumber AND a.password = :accountPassword");
+        query.setParameter("accountNumber", accountNumber).setParameter("accountPassword", accountPassword);
+        return query.getResultList();
     }
 
     public Account getAccountById(Long accountId) {
@@ -160,10 +169,19 @@ public class ChatService {
     @GET
     @Path("testdata1")
     public Account insertTestdata1() {
-        createTestAccount(new Account("Tor-Martin Holen", "91367954", "Blank", "MightyPassword"));
-        createTestAccount(new Account("Jeff Hudson", "41569822", "Blank", "1234"));
-        createTestAccount(new Account("Barry Allan", "90874454", "Blank", "Pw"));
+        createTestAccount(new Account("Tor-Martin Holen", "91367954", "", "1234"));
+        createTestAccount(new Account("Oliver Queen", "91234561", "", "1234"));
+        createTestAccount(new Account("Felicity Smokes", "91234562", "", "1234"));
+        createTestAccount(new Account("Barry Allan", "91234563", "", "1234"));
+        createTestAccount(new Account("Dr. Wells", "91234564", "", "1234"));
+        createTestAccount(new Account("Sarah Lance", "91234565", "", "1234"));
+        createTestAccount(new Account("Ray Palmer", "91234566", "", "1234"));
+        createTestAccount(new Account("Kara Danvers", "91234567", "", "1234"));
+        createTestAccount(new Account("Alex Danvers", "91234568", "", "1234"));
+        
+        
 
+        
         createTestConversation(new Conversation());
 
         createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Hello"));
@@ -171,20 +189,22 @@ public class ChatService {
 
         updateConversation(getAllConversations().get(0), getAllAccounts(), getAllMessages());
 
-        return new Account();
-    }
-
-    @GET
-    @Path("testdata2")
-    public Account insertTestdata2() {
-
         Message m = createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Nothing much, just coding like a pro!"));
         updateConversation(getAllConversations().get(0), null, Arrays.asList(m));
 
         createTestConversation(new Conversation());
         updateConversation(getConversationById(2L), getAllAccounts(), null);
+        
         return new Account();
     }
+
+//    @GET
+//    @Path("testdata2")
+//    public Account insertTestdata2() {
+//
+//
+//        return new Account();
+//    }
 //    
 //    @GET
 //    @Path("testdata3")

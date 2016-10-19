@@ -11,20 +11,21 @@ import java.util.List;
  * Created by dogsh on 16-Oct-16.
  */
 
-public final class DownloadedDataHandler {
-    private static volatile DownloadedDataHandler instance = new DownloadedDataHandler();
+public final class DataHandler {
+    private static volatile DataHandler instance = new DataHandler();
 
     List<LoadAccounts.Account> accounts;
     List<LoadMessages.Message> messages;
     List<LoadConversations.Conversation> conversations;
+    LoadAccounts.Account myAccount;
 
-    private DownloadedDataHandler() {
+    private DataHandler() {
         this.accounts = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.conversations = new ArrayList<>();
     }
 
-    public static DownloadedDataHandler getInstance(){
+    public static DataHandler getInstance(){
         return instance;
     }
 
@@ -76,5 +77,13 @@ public final class DownloadedDataHandler {
 
     public void setConversations(List<LoadConversations.Conversation> conversations) {
         this.conversations = conversations;
+    }
+
+    public void setMyAccount(LoadAccounts.Account account){
+        myAccount = account;
+    }
+
+    public LoadAccounts.Account getMyAccount() {
+        return myAccount;
     }
 }

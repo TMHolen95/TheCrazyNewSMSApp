@@ -1,5 +1,6 @@
 package com.tmholen.thecrazynewsmsapp.activities;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.PostAccount;
+import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -50,8 +52,8 @@ public class AccountRegistration extends AppCompatActivity {
                     errorMessage += "Your phone number must be at least 8 numbers long!\n\n";
                     goToMainActivity = false;
                 }
-                if (fieldPassword.getText().toString().length() < 8) {
-                    errorMessage += "Your password must be at least 8 characters long!";
+                if (fieldPassword.getText().toString().length() < 4) {
+                    errorMessage += "Your password must be at least 4 characters long!";
                     goToMainActivity = false;
                 }
 
@@ -70,12 +72,7 @@ public class AccountRegistration extends AppCompatActivity {
                                     @Override
                                     public void onPostExecute(LoadAccounts.Account account, int responseCode) {
                                         if (responseCode == HttpURLConnection.HTTP_OK) {
-                                            SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor preferenceEditor = sharedPreferences.edit();
-                                            preferenceEditor.putLong("id", account.getId());
-                                            preferenceEditor.putString("name", account.getName());
-                                            preferenceEditor.putString("number", account.getNumber());
-                                            preferenceEditor.commit();
+                                            DataHandler.getInstance().setMyAccount(account);
 
                                             Intent i = new Intent(getApplicationContext(), Conversations.class);
                                             startActivity(i);
@@ -104,6 +101,7 @@ public class AccountRegistration extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), AccountLogin.class);
                 startActivity(i);
+                finish();
             }
         });
     }

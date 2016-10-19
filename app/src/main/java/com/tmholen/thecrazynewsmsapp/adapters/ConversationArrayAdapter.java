@@ -38,7 +38,7 @@ public class ConversationArrayAdapter extends ArrayAdapter {
         contactImage.setImageURI(t.ParseResourceToUri(R.drawable.ic_person_missing_photo));
 
         TextView contactName = (TextView) convertView.findViewById(R.id.messageRecipient);
-        /*DownloadedDataHandler.getInstance().getConversationById(conversation.getId())
+        /*DataHandler.getInstance().getConversationById(conversation.getId())
         contactName.setText(conversation.getContactName());
 
         TextView lastMessage = (TextView) convertView.findViewById(R.id.message);
