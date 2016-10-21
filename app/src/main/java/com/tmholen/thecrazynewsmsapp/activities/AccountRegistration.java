@@ -16,9 +16,12 @@ import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.PostAccount;
 import com.tmholen.thecrazynewsmsapp.data.DataHandler;
+import com.tmholen.thecrazynewsmsapp.etc.Tools;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 public class AccountRegistration extends AppCompatActivity {
     private String errorMessage = "";
     private Boolean goToMainActivity = true;
+    private Tools t = new Tools(){};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +70,10 @@ public class AccountRegistration extends AppCompatActivity {
                             new ArrayList<Long>());
 
                     try {
+
+
                         new PostAccount(
-                                "http://192.168.2.4:8080/MessagingServer/service/chat/accounts/create",
+                                "http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/accounts/create",
                                 new PostAccount.Callback() {
                                     @Override
                                     public void onPostExecute(LoadAccounts.Account account, int responseCode) {

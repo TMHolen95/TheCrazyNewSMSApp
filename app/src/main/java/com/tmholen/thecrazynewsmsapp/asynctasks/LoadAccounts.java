@@ -109,7 +109,6 @@ public class LoadAccounts extends AsyncTask<String,Long,List<LoadAccounts.Accoun
         }
 
 
-
         public Long getId() {
             return id;
         }
@@ -120,6 +119,14 @@ public class LoadAccounts extends AsyncTask<String,Long,List<LoadAccounts.Accoun
 
         public String getNumber() {
             return number;
+        }
+
+        public List<Long> getConversationIds() {
+            return conversationIds;
+        }
+
+        public void setConversationIds(List<Long> conversationIds) {
+            this.conversationIds = conversationIds;
         }
     }
 

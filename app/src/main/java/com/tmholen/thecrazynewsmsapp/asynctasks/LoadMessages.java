@@ -1,7 +1,6 @@
 package com.tmholen.thecrazynewsmsapp.asynctasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,7 +70,14 @@ public class LoadMessages extends AsyncTask<String,Long,List<LoadMessages.Messag
         Long conversationId;
         Long senderId;
         String text;
-        Long timestamp;
+        Long timestampSent;
+
+        public Message(Long conversationId, Long senderId, String text) {
+            this.conversationId = conversationId;
+            this.senderId = senderId;
+            this.text = text;
+            this.timestampSent = System.currentTimeMillis();
+        }
 
         public Long getConversationId() {
             return conversationId;
@@ -105,19 +111,19 @@ public class LoadMessages extends AsyncTask<String,Long,List<LoadMessages.Messag
             this.text = text;
         }
 
-        public Long getTimestamp() {
-            return timestamp;
+        public Long getTimestampSent() {
+            return timestampSent;
         }
 
-        public void setTimestamp(Long timestamp) {
-            this.timestamp = timestamp;
+        public void setTimestampSent(Long timestampSent) {
+            this.timestampSent = timestampSent;
         }
 
     }
     public static Comparator<LoadMessages.Message> messageComparator = new Comparator<Message>() {
         @Override
         public int compare(Message m1, Message m2) {
-            return Long.compare(m1.getTimestamp(), m2.getTimestamp());
+            return Long.compare(m1.getTimestampSent(), m2.getTimestampSent());
         }
 
     };

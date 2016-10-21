@@ -12,14 +12,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tmholen.thecrazynewsmsapp.R;
 import com.tmholen.thecrazynewsmsapp.adapters.MessageArrayAdapter;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
+import com.tmholen.thecrazynewsmsapp.asynctasks.PostAccount;
+import com.tmholen.thecrazynewsmsapp.asynctasks.PostMessage;
 import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,29 +39,69 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
     private Toolbar toolbar;
     private NavigationView navigationView;
     private MenuItem previousItem;
-    /*private ArrayList<TextMessage> textMessage;*/
     private MessageArrayAdapter messageArrayAdapter;
-
+    private EditText fieldInput;
+    private Button sendButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screens);
         AddDefaultNavigationActivityElementsToScreen();
-        entryList = (ListView) findViewById(R.id.entryListView);
+        entryList = (ListView) findViewById(R.id.mainListView);
+        fieldInput = (EditText) findViewById(R.id.mainFieldInput);
+        fieldInput.setVisibility(View.VISIBLE);
+
+
+        Intent intentFromBefore = getIntent();
+        Bundle bundle = intentFromBefore.getExtras();
+        final Long conversationId = (Long) bundle.get("conversationId");
 
         new LoadMessages(
                 new LoadMessages.Callback() {
                     @Override
                     public void update(List<LoadMessages.Message> messages) {
+                        Collections.sort(messages, LoadMessages.messageComparator);
                         DataHandler.getInstance().setMessages(messages);
-                        //Collections.sort(messages, LoadMessages.messageComparator);
-                        messageArrayAdapter = new MessageArrayAdapter(getApplicationContext(), messages);
+                        messageArrayAdapter = new MessageArrayAdapter(getApplicationContext(), DataHandler.getInstance().getMessages());
                         entryList.setAdapter(messageArrayAdapter);
                         messageArrayAdapter.notifyDataSetChanged();
                     }
                 }
-        ).execute("http://192.168.2.4:8080/MessagingServer/service/chat/messages");
+        ).execute("http://" + DataHandler.getInstance().getMyIp()+ ":8080/MessagingServer/service/chat/messages/byConId/"
+        + conversationId);
 
+
+        sendButton = (Button) findViewById(R.id.mainSendButton);
+        sendButton.setVisibility(View.VISIBLE);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!fieldInput.getText().toString().equals("")){
+                    try {
+                        LoadMessages.Message myMessage = new LoadMessages.Message(conversationId,
+                                DataHandler.getInstance().getMyAccount().getId(),
+                                fieldInput.getText().toString());
+                        fieldInput.setText("");
+
+                        new PostMessage(
+                                "http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/messages/create",
+                                new PostMessage.Callback() {
+                                    @Override
+                                    public void onPostExecute(LoadMessages.Message message, int responseCode) {
+                                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                                            DataHandler.getInstance().addMessage(message);
+                                            messageArrayAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                }
+                        ).execute(myMessage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
     }
 
 
@@ -102,12 +150,12 @@ public class Messaging extends AppCompatActivity implements NavigationView.OnNav
         if (previousItem != null) {
             previousItem.setChecked(false);
         } else {
-            navigationView.getMenu().findItem(R.id.nav_message_screen).setChecked(false);
+            navigationView.getMenu().findItem(R.id.nav_conversation_screen).setChecked(false);
         }
         item.setChecked(true);
 
 
-        if (id == R.id.nav_message_screen) {
+        if (id == R.id.nav_conversation_screen) {
             //DisplayMessageData();
 
         } else if (id == R.id.nav_contact_screen) {

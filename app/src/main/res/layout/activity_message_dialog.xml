@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/listview_content_screen"
+        layout="@layout/main_content_screen"
         android:id="@+id/messageList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -47,7 +47,6 @@ public class AccountLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 if (fieldNumber.getText().toString().length() < 8) {
                     errorMessage += "Your phone number must be at least 8 numbers long!\n\n";
                     goToMainActivity = false;
@@ -58,7 +57,7 @@ public class AccountLogin extends AppCompatActivity {
                 }
 
                 if (goToMainActivity) {
-                    String path = "http://192.168.2.4:8080/MessagingServer/service/chat/login/" +
+                    String path = "http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/login/" +
                             fieldNumber.getText().toString() + "/" + fieldPassword.getText().toString();
                     new LoadAccounts(
                             new LoadAccounts.Callback() {
@@ -85,7 +84,6 @@ public class AccountLogin extends AppCompatActivity {
                 }else{
                     textExplanation.setText(errorMessage);
                     textExplanation.setVisibility(View.VISIBLE);
-                    goToMainActivity = true;
                 }
 
             }

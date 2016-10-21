@@ -15,27 +15,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by dogsh on 17-Oct-16.
+ * Created by dogsh on 20-Oct-16.
  */
 
-public class PostAccount extends AsyncTask<LoadAccounts.Account, Void, LoadAccounts.Account> {
+public class PostConversation extends AsyncTask<LoadConversations.Conversation, Void, LoadConversations.Conversation> {
     public interface Callback {
-        void onPostExecute(LoadAccounts.Account account, int responseCode);
+        void onPostExecute(LoadConversations.Conversation conversation, int responseCode);
     }
 
     private Callback callback;
     private URL url;
     private int responseCode = -1;
 
-    public PostAccount(String url, Callback callback ) throws IOException {
+    public PostConversation(String url, Callback callback ) throws IOException {
         this.callback = callback;
         this.url = new URL(url);
     }
 
-
     @Override
-    protected LoadAccounts.Account doInBackground(LoadAccounts.Account... accounts) {
-        LoadAccounts.Account result = null;
+    protected LoadConversations.Conversation doInBackground(LoadConversations.Conversation... conversations) {
+        LoadConversations.Conversation result = null;
 
         HttpURLConnection connection = null;
         try {
@@ -43,17 +42,17 @@ public class PostAccount extends AsyncTask<LoadAccounts.Account, Void, LoadAccou
 
             JsonWriter wr = new JsonWriter(new OutputStreamWriter(connection.getOutputStream(),"UTF-8"));
             Gson gson = new GsonBuilder().create();
-            gson.toJson(accounts[0], LoadAccounts.Account.class, wr);
+            gson.toJson(conversations[0], LoadConversations.Conversation.class, wr);
             wr.close();
 
             responseCode = connection.getResponseCode();
             if(responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-                result = gson.fromJson(br,LoadAccounts.Account.class);
+                result = gson.fromJson(br, LoadConversations.Conversation.class);
                 br.close();
             }
         } catch (IOException e) {
-            Log.d("PostAccount", "doInBackground: ",e);
+            Log.d("PostConversation", "doInBackground: ",e);
         }
 
         if(connection != null) {
@@ -64,9 +63,9 @@ public class PostAccount extends AsyncTask<LoadAccounts.Account, Void, LoadAccou
     }
 
     @Override
-    protected void onPostExecute(LoadAccounts.Account account) {
+    protected void onPostExecute(LoadConversations.Conversation conversation) {
         if(callback != null) {
-            callback.onPostExecute(account,responseCode);
+            callback.onPostExecute(conversation,responseCode);
         }
     }
 
@@ -81,5 +80,5 @@ public class PostAccount extends AsyncTask<LoadAccounts.Account, Void, LoadAccou
 
         return result;
     }
-}
 
+}

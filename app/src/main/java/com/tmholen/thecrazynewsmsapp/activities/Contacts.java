@@ -1,10 +1,7 @@
 package com.tmholen.thecrazynewsmsapp.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,28 +17,32 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
-import com.tmholen.thecrazynewsmsapp.data.DataHandler;
-import com.tmholen.thecrazynewsmsapp.etc.PermissionHandler;
 import com.tmholen.thecrazynewsmsapp.R;
-import com.tmholen.thecrazynewsmsapp.adapters.ConversationArrayAdapter;
+import com.tmholen.thecrazynewsmsapp.adapters.AccountArrayAdapter;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
+import com.tmholen.thecrazynewsmsapp.asynctasks.LoadConversations;
+import com.tmholen.thecrazynewsmsapp.asynctasks.PostConversation;
+import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Created by dogsh on 20-Oct-16.
+ */
 
-public class Conversations extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int PERMISSION_REQUEST_CONTACTS = 1;
+public class Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView entryList;
-    private ConversationArrayAdapter conversationArrayAdapter;
-    private PermissionHandler permissions;
-
+    private AccountArrayAdapter accountArrayAdapter;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private MenuItem previousItem;
     private DataHandler dh;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
         entryList = (ListView) findViewById(R.id.mainListView);
 
         AddDefaultNavigationActivityElementsToScreen();
-        permissions = new PermissionHandler(this, this);
 
         dh = DataHandler.getInstance();
 
@@ -65,26 +64,36 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
         entryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LoadConversations.Conversation conversation = (LoadConversations.Conversation) adapterView.getItemAtPosition(i);
-                Log.i("Con", "ID: " + conversation.getId());
 
-                Intent intent = new Intent(getApplicationContext(), Messaging.class);
-                intent.putExtra("conversationId", conversation.getId());
-                startActivity(intent);
+                LoadAccounts.Account contactAccount = (LoadAccounts.Account) adapterView.getItemAtPosition(i);
+                LoadAccounts.Account myAccount = DataHandler.getInstance().getMyAccount();
+
+                List<Long> accountIds = new ArrayList<Long>();
+                accountIds.add(myAccount.getId());
+                accountIds.add(contactAccount.getId());
+
+                LoadConversations.Conversation newConversation = new LoadConversations.Conversation(accountIds);
+
+                try {
+                    new PostConversation(
+                            "http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/conversations/create",
+                            new PostConversation.Callback(){
+                                @Override
+                                public void onPostExecute(LoadConversations.Conversation conversation, int responseCode) {
+                                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                                        Intent intent = new Intent(getApplicationContext(), Messaging.class);
+                                        intent.putExtra("conversationId", conversation.getId());
+                                        DataHandler.getInstance().addConversation(conversation);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                    ).execute(newConversation);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-/*        permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
-
-        if(permissions.permissionGranted(Manifest.permission.WRITE_CONTACTS)){
-
-        }else{
-            DisplayMissingPermissionData();
-        }*/
-
-
-
-
     }
 
     @Override
@@ -132,20 +141,6 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CONTACTS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    System.out.println("Permission denied");
-                }
-            }
-        }
-    }
-
     public void AddDefaultNavigationActivityElementsToScreen() {
         EnableToolbar();
         ShowFabButton();
@@ -155,21 +150,13 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
 
     public void EnableToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Conversations");
         setSupportActionBar(toolbar);
-
     }
 
 
     public void ShowFabButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Contacts.class);
-                startActivity(i);
-            }
-        });
+        fab.setVisibility(View.GONE);
     }
 
 
@@ -187,7 +174,6 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
 
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -197,7 +183,7 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
         if (previousItem != null) {
             previousItem.setChecked(false);
         } else {
-            navigationView.getMenu().findItem(R.id.nav_conversation_screen).setChecked(false);
+            navigationView.getMenu().findItem(R.id.nav_contact_screen).setChecked(false);
         }
         item.setChecked(true);
 
@@ -228,88 +214,39 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
-
-    private void CheckPermissionBeforeDisplayingContacts() {
-        permissions.requestAccessToContacts(PERMISSION_REQUEST_CONTACTS);
-        if (permissions.permissionGranted(Manifest.permission.WRITE_CONTACTS)) {
-            //DisplayContactData();
-        } else {
-            System.out.println("Missing permisssions...");
-        }
-    }
-
     private void GoToLogin() {
         Intent i = new Intent(getApplicationContext(), AccountLogin.class);
         startActivity(i);
         finish();
     }
 
-    private void UpdateNavigationHeader(){
+    private void UpdateNavigationHeader() {
         TextView myName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userName);
         myName.setText(DataHandler.getInstance().getMyAccount().getName());
         TextView myNumber = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userNumber);
         myNumber.setText(DataHandler.getInstance().getMyAccount().getNumber());
     }
 
-
-    private void UpdateAccountList(){
+    private void PopulateListview() {
         new LoadAccounts(
                 new LoadAccounts.Callback() {
                     @Override
                     public void update(List<LoadAccounts.Account> accounts) {
                         Collections.sort(accounts, LoadAccounts.accountComparator);
-                        for(int i = 0; i< accounts.size();i++){
-                            if (dh.getMyAccount().getId().equals(accounts.get(i).getId())){
+                        for (int i = 0; i < accounts.size(); i++) {
+                            if (dh.getMyAccount().getId().equals(accounts.get(i).getId())) {
                                 accounts.remove(i); //We don't want to list our own account in the contact list
                                 break;
                             }
                         }
                         DataHandler.getInstance().setAccounts(accounts);
-                    }
-                }
-        ).execute("http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/accounts");
-        PopulateListview();
-    }
-
-    private void PopulateListview(){
-        new LoadAccounts(
-                new LoadAccounts.Callback() {
-                    @Override
-                    public void update(List<LoadAccounts.Account> accounts) {
-                        Collections.sort(accounts, LoadAccounts.accountComparator);
-                        for(int i = 0; i< accounts.size();i++){
-                            if (dh.getMyAccount().getId().equals(accounts.get(i).getId())){
-                                accounts.remove(i); //We don't want to list our own account in the contact list
-                                break;
-                            }
-                        }
-                        DataHandler.getInstance().setAccounts(accounts);
-/*
-                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DataHandler.getInstance().getRecipients());
+                        accountArrayAdapter = new AccountArrayAdapter(getApplicationContext(), DataHandler.getInstance().getAccounts());
                         entryList.setAdapter(accountArrayAdapter);
-                        accountArrayAdapter.notifyDataSetChanged();*/
+                        accountArrayAdapter.notifyDataSetChanged();
                     }
                 }
-        ).execute("http://" + DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/accounts");
+        ).execute("http://" + DataHandler.getInstance().getMyIp() + ":8080/MessagingServer/service/chat/accounts");
 
-        new LoadConversations(
-                new LoadConversations.Callback() {
-                    @Override
-                    public void update(List<LoadConversations.Conversation> conversations) {
-                        //Collections.sort(conversations, LoadAccounts.accountComparator);
-
-                        dh.setConversations(conversations);
-                        conversationArrayAdapter = new ConversationArrayAdapter(getApplicationContext(), dh.getConversations());
-                        entryList.setAdapter(conversationArrayAdapter);
-                        conversationArrayAdapter.notifyDataSetChanged();
-                    }
-                }
-        ).execute("http://"+ DataHandler.getInstance().getMyIp() +":8080/MessagingServer/service/chat/myConversations/" + dh.getMyAccount().getNumber());
-                //"myConversations/" + dh.getMyAccount().getNumber());
-    }
-
-    private void RefreshListview(){
 
     }
-
 }

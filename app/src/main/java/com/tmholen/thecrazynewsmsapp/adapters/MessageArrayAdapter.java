@@ -16,6 +16,7 @@ import com.tmholen.thecrazynewsmsapp.asynctasks.LoadAccounts;
 import com.tmholen.thecrazynewsmsapp.asynctasks.LoadMessages;
 import com.tmholen.thecrazynewsmsapp.data.DataHandler;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class MessageArrayAdapter extends ArrayAdapter {
         recipientImage.setImageURI(t.ParseMissingImageToUri());
 
         TextView recipientName = (TextView) convertView.findViewById(R.id.messageRecipient);
+        assert message != null;
         LoadAccounts.Account recipient = DataHandler.getInstance().getAccountById(message.getSenderId());
         recipientName.setText(recipient.getName());
 
@@ -49,8 +51,8 @@ public class MessageArrayAdapter extends ArrayAdapter {
 
         TextView recipientMessageTimestamp = (TextView) convertView.findViewById(R.id.messageTimestamp);
 
-        /*Calendar timestamp = t.getCalendarFromTimestamp(message.getTimestamp());
-        recipientMessageTimestamp.setText(t.getRelevantStringDate(timestamp));*/
+        Calendar timestamp = t.getCalendarFromTimestamp(message.getTimestampSent());
+        recipientMessageTimestamp.setText(t.getRelevantStringDate(timestamp));
 
         return convertView;
     }

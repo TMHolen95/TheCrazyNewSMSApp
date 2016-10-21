@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame_layout_content_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <ListView
+        android:id="@+id/mainListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mainFieldInput"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:scrollbarSize="15dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_style" />
+
+    <EditText
+        android:id="@+id/mainFieldInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/colorSecondaryLight"
+        android:hint="Type to chat"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/mainSendButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/mainFieldInput"
+        android:layout_alignTop="@+id/mainFieldInput"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/ic_send"
+        android:visibility="gone" />
+</RelativeLayout>

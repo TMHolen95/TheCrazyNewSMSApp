@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
+import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,7 +40,7 @@ public class ChatService {
     public List<Account> getAccount(@PathParam("id") Long accountId) {
         return em.createQuery("SELECT a from Account a WHERE a.id = :accountId").setParameter("accountId", accountId).getResultList();
     }
-    
+
     @GET
     @Path("login/{number}/{password}")
     public List<Account> getAccount(@PathParam("number") String accountNumber, @PathParam("password") String accountPassword) {
@@ -84,6 +85,14 @@ public class ChatService {
         return em.createQuery("SELECT m from Message m").getResultList();
     }
 
+    @GET
+    @Path("messages/byConId/{conId}")
+    public List<Message> getMessageById(@PathParam("conId") Long conId) {
+        Query query = em.createQuery("SELECT m from Message m WHERE m.conversationId = :conId");
+        query.setParameter("conId", conId);
+        return query.getResultList();
+    }
+
     public Message getMessage(Long msgId) {
         return (Message) em.createQuery("SELECT m from Message m WHERE m.id = :msgId").setParameter("msgId", msgId).getSingleResult();
     }
@@ -94,7 +103,7 @@ public class ChatService {
     }
 
     @POST
-    @Path("messages/create")
+    @Path("messages/create/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Message createMessage(Message message) {
         try {
@@ -104,9 +113,9 @@ public class ChatService {
         }
         return message;
     }
-    
+
     @POST
-    @Path("conversations/create")
+    @Path("conversations/create/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Conversation createConversation(Conversation conversation) {
         try {
@@ -116,7 +125,7 @@ public class ChatService {
         }
         return conversation;
     }
-    
+
     @POST
     @Path("accounts/create")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -127,7 +136,7 @@ public class ChatService {
             System.out.println("com.tmholen.messagingserver.ChatService.sendMessage()");
         }
         return account;
-    }    
+    }
 
     @GET
     @Path("conversations")
@@ -137,6 +146,26 @@ public class ChatService {
 
     public Conversation getConversationById(Long convId) {
         return (Conversation) em.createQuery("SELECT c from Conversation c WHERE c.id = :convId").setParameter("convId", convId).getSingleResult();
+    }
+
+    @GET
+    @Path("myConversations/{myNumber}")
+    public List<Conversation> getMyConversations(@PathParam("myNumber") String myNumber) {
+        Query query = em.createQuery("SELECT a from Account a WHERE a.number = :accountNumber");
+        query.setParameter("accountNumber", myNumber);
+        List<Account> myAccountContainer = query.getResultList();
+        Long myAccountId = myAccountContainer.get(0).getId();
+
+        List<Conversation> conversations = getAllConversations();
+        List<Conversation> myConversations = new ArrayList<>();
+
+        for (int i = 0; i < conversations.size(); i++) {
+            if (Objects.equals(myAccountId, conversations.get(i).getRecipients().get(0).getId()) || Objects.equals(myAccountId, conversations.get(i).getRecipients().get(1).getId())) {
+                myConversations.add(conversations.get(i));
+            }
+        }
+
+        return myConversations;
     }
 
     public Conversation createTestConversation(Conversation conversation) {
@@ -178,23 +207,40 @@ public class ChatService {
         createTestAccount(new Account("Ray Palmer", "91234566", "", "1234"));
         createTestAccount(new Account("Kara Danvers", "91234567", "", "1234"));
         createTestAccount(new Account("Alex Danvers", "91234568", "", "1234"));
-        
-        
 
-        
-        createTestConversation(new Conversation());
+        Long time = 0L;
 
-        createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Hello"));
-        createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(1).getId(), "Hey, whats up?"));
+        Conversation c1 = createTestConversation(new Conversation());
 
-        updateConversation(getAllConversations().get(0), getAllAccounts(), getAllMessages());
+        Long a1 = getAccountByNumber("91367954").getId();
+        Long a2 = getAccountByNumber("91234561").getId();
+        List<Account> accountsConv1 = new ArrayList<>();
+        accountsConv1.add(getAccountById(a1));
+        accountsConv1.add(getAccountById(a2));
+        updateConversation(c1, accountsConv1, null);
 
-        Message m = createTestMessage(new Message(getAllConversations().get(0).getId(), getAllAccounts().get(0).getId(), "Nothing much, just coding like a pro!"));
-        updateConversation(getAllConversations().get(0), null, Arrays.asList(m));
+        List<Message> messagesConv1 = new ArrayList<>();
+        messagesConv1.add(createTestMessage(new Message(c1.getId(), a1, "Hello", System.currentTimeMillis())));
+        messagesConv1.add(createTestMessage(new Message(c1.getId(), a2, "Hey, whats up?", System.currentTimeMillis() + 116500)));
+        messagesConv1.add(createTestMessage(new Message(c1.getId(), a1, "Nothing much, just coding like a pro!", System.currentTimeMillis() + 254999)));
+        updateConversation(c1, null, messagesConv1);
 
-        createTestConversation(new Conversation());
-        updateConversation(getConversationById(2L), getAllAccounts(), null);
-        
+        //////////
+        Conversation c2 = createTestConversation(new Conversation());
+
+        Long a3 = getAccountByNumber("91234562").getId();
+        Long a4 = getAccountByNumber("91234563").getId();
+        List<Account> accountsConv2 = new ArrayList<>();
+        accountsConv2.add(getAccountById(a3));
+        accountsConv2.add(getAccountById(a4));
+        updateConversation(c2, accountsConv2, null);
+
+        List<Message> messagesConv2 = new ArrayList<>();
+        messagesConv2.add(createTestMessage(new Message(c2.getId(), a3, "Hi you ;-)", System.currentTimeMillis())));
+        messagesConv2.add(createTestMessage(new Message(c2.getId(), a4, "Hey :-)", System.currentTimeMillis() + 30234)));
+        messagesConv2.add(createTestMessage(new Message(c2.getId(), a3, "So what is new?!", System.currentTimeMillis() + 76502)));
+        updateConversation(c2, null, messagesConv2);
+
         return new Account();
     }
 

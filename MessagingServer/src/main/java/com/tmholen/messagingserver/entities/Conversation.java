@@ -25,7 +25,7 @@ public class Conversation implements Serializable {
     @OneToMany (cascade = CascadeType.ALL)
     List<Message> messages;
     
-    //@XmlTransient
+        //@XmlTransient
     @XmlJavaTypeAdapter (AccountAdapter.class)
     @ManyToMany (/*mappedBy = "ConversationOverview",*/cascade = CascadeType.PERSIST)
     List<Account> recipients;
@@ -59,4 +59,9 @@ public class Conversation implements Serializable {
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
+    
+    public void addMessage(Message message){
+        messages.add(message);
+    }
+    
 }

@@ -3,9 +3,12 @@ package com.tmholen.thecrazynewsmsapp.etc;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import com.tmholen.thecrazynewsmsapp.R;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +45,7 @@ public abstract class Tools {
 
     public Calendar getCalendarFromTimestamp(Long timestampInLong){
         Calendar timestamp = Calendar.getInstance();
-        timestamp.setTimeInMillis(timestampInLong.longValue());
+        timestamp.setTimeInMillis(timestampInLong);
         return timestamp;
     }
 
