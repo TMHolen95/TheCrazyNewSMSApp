@@ -184,7 +184,7 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
     public void FillNavigationDrawerMenu() {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.getMenu().findItem(R.id.nav_conversation_screen).setChecked(true);
     }
 
 
@@ -196,17 +196,20 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
 
         if (previousItem != null) {
             previousItem.setChecked(false);
-        } else {
-            navigationView.getMenu().findItem(R.id.nav_conversation_screen).setChecked(false);
         }
-        item.setChecked(true);
+        if(item == navigationView.getMenu().findItem(R.id.nav_conversation_screen) || item == navigationView.getMenu().findItem(R.id.nav_contact_screen)){
+            item.setChecked(true);
+            previousItem = item;
+        }
 
 
         if (id == R.id.nav_conversation_screen) {
+            item.setChecked(false);
             Intent i = new Intent(getApplicationContext(), Conversations.class);
             startActivity(i);
 
         } else if (id == R.id.nav_contact_screen) {
+            item.setChecked(false);
             Intent i = new Intent(getApplicationContext(), Contacts.class);
             startActivity(i);
 
@@ -222,7 +225,7 @@ public class Conversations extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_delete) {
             Toast.makeText(this, "Functionality in development.", Toast.LENGTH_SHORT).show();
         }
-        previousItem = item;
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

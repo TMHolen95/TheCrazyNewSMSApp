@@ -19,8 +19,8 @@ public final class DataHandler {
     List<LoadMessages.Message> messages;
     List<LoadConversations.Conversation> conversations;
     LoadAccounts.Account myAccount;
-    //String myIp = "158.38.193.21";
-    String myIp = "192.168.2.4";
+    String myIp = "158.38.193.23";
+    //String myIp = "192.168.2.4";
 
     private DataHandler() {
         this.accounts = new ArrayList<>();
